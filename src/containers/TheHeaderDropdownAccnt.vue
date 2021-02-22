@@ -52,7 +52,7 @@ export default {
   methods:{
     logout(){
       let self = this;
-      axios.post( this.$apiAdress + '/api/logout?token=' + localStorage.getItem("api_token"),{})
+      axios.post( this.$apiAdress + '/api/admin/logout?token=' + localStorage.getItem("api_token"),{})
       .then(function (response) {
         localStorage.clear();
         self.$router.push({ path: '/login' });

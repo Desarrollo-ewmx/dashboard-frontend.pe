@@ -5,7 +5,7 @@ var dashboard = {
   dashboardUpdate(campo,valor) {
     let self = this;
 
-    axios.post(store.state.apiUrl+'/api/perfil/update-dashboard?token='+localStorage.getItem("api_token"), {
+    axios.post(store.state.apiAdress+'/api/admin/perfil/update-dashboard?token='+localStorage.getItem("api_token"), {
       campo:  campo,
       valor:  valor
     }).then(function (response) {

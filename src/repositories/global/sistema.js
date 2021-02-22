@@ -2,9 +2,9 @@ import "regenerator-runtime/runtime";
 import axios from "axios";
 import alert from '@/repositories/global/alert'
 
-const getInfo = async (apiUrl) => {
+const getInfo = async (apiAdress) => {
 	try {
-		let resp = await axios.get(apiUrl+'/api/sistema/default');
+		let resp = await axios.get(apiAdress+'/api/admin/sistema/default');
 		localStorage.setItem("sistema", JSON.stringify(resp.data.sistema));
 		localStorage.setItem("desarrollador", JSON.stringify(resp.data.desarrollador));
 

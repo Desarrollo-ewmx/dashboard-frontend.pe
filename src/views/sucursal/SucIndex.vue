@@ -30,7 +30,7 @@
                   >
                   <template #suc="{item}">
                     <td>
-                      <CLink v-if="!permisos(['sucursal.show'])" :hidden="permisos(['sucursal.show'])" @click="showRegistro(item.id)" v-text="item.suc" />
+                      <CLink v-if="!permisos(['sucursal.show'])" @click="showRegistro(item.id)" v-text="item.suc" />
                       <span v-else v-text="item.suc" />
                     </td>
                   </template>
@@ -58,6 +58,7 @@ import check from '@/repositories/global/check'
 import alert from '@/repositories/global/alert'
 import SucMenu from './SucMenu'
 import Swal from 'sweetalert2'
+import repo from './Repositories'
 
 export default {
   name: 'SucIndex',
@@ -85,10 +86,10 @@ export default {
       return !check.permiso(permisos)
     },
     showRegistro(id) {
-      this.$router.push({path: `sucursales/detalles/${id.toString()}`});
+      repo.showRegistro(this,id)
     },
     editRegistro(id) {
-      this.$router.push({path: `sucursales/editar/${id.toString()}`});
+      repo.editRegistro(this,id)
     },
     deleteRegistro(id) {
       Swal.fire({
@@ -103,11 +104,11 @@ export default {
       }).then((result) => {
         if(result.isConfirmed) {
           let self = this;
-          axios.post(self.$apiAdress+'/api/sucursal/eliminar/'+id+'?token='+localStorage.getItem("api_token"), {
+          axios.post(self.$apiAdress+'/api/admin/sucursal/eliminar/'+id+'?token='+localStorage.getItem("api_token"), {
             _method: 'DELETE'
           })
           .then(function (response) {
-            alert.response200('¡Registro eliminado exitosamente!','')
+            alert.response200(2, '¡Registro eliminado exitosamente!','')
             self.getSucursales();
           }).catch(function (error) {
             alert.responseCatch(error, 'Code #1004');
@@ -120,7 +121,7 @@ export default {
       self.loading = true
       self.items = [];
       
-      axios.post(self.$apiAdress+'/api/sucursal?token='+localStorage.getItem("api_token")+'&page='+self.activePage, {
+      axios.post(self.$apiAdress+'/api/admin/sucursal?token='+localStorage.getItem("api_token")+'&page='+self.activePage, {
         sorter:       self.sorter,
         tableFilter:  self.tableFilter,
         columnFilter: self.columnFilter,

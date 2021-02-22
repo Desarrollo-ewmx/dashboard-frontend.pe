@@ -9,7 +9,7 @@ const state = {
   sidebarMinimize: dash.sidebarMinimize(),
   asideShow: false,
   darkMode: dash.darkMode(),
-  apiUrl: 'http://127.0.0.1:8000'
+  apiAdress: 'http://127.0.0.1:8000'
 }
 
 const mutations = {

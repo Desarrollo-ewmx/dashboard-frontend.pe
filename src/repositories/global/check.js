@@ -27,7 +27,7 @@ var check = {
 	},
 	getUserAutenticado(to, next) { 
 		if(localStorage.getItem("api_token") != null) { // Verifica si el token aun sigue siendo valido para actualizar la información del usuario
-      axios.post(store.state.apiUrl+'/api/autenticado?token=' + localStorage.getItem("api_token"))
+      axios.post(store.state.apiAdress+'/api/admin/autenticado?token=' + localStorage.getItem("api_token"))
       .then(function (response) {
         dash.getDataStoreUser(response.data, false)
       }).catch(function (error) {

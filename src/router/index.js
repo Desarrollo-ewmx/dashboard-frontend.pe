@@ -54,6 +54,7 @@ const TheContainer = () => import('@/containers/TheContainer')
 const Dashboard = () => import('@/views/Dashboard')
 
 // Views - Pages
+const Page104 = () => import('@/views/pages/Page104')
 const Page404 = () => import('@/views/pages/Page404')
 const Page500 = () => import('@/views/pages/Page500')
 const Login = () => import('@/views/auth/Login')
@@ -73,10 +74,10 @@ const CatShow = () => import('@/views/configuracion/catalogo/CatShow')
 const CatEdit = () => import('@/views/configuracion/catalogo/CatEdit')
 
 // Users
-const Users = () => import('@/views/users/Users')
+const Index = () => import('@/views/users/Index')
 const User = () => import('@/views/users/User')
 const EditUser = () => import('@/views/users/EditUser')
-
+const CreateUser = () => import('@/views/users/CreateUser')
 //Notes
 const Notes = () => import('@/views/notes/Notes')
 const Note = () => import('@/views/notes/Note')
@@ -88,14 +89,6 @@ const Roles = () => import('@/views/roles/Roles')
 const Role = () => import('@/views/roles/Role')
 const EditRole = () => import('@/views/roles/EditRole')
 const CreateRole = () => import('@/views/roles/CreateRole')
-
-//Email
-const Emails        = () => import('@/views/email/Emails')
-const CreateEmail  = () => import('@/views/email/CreateEmail')
-const EditEmail    = () => import('@/views/email/EditEmail')
-const ShowEmail     = () => import('@/views/email/ShowEmail')
-const SendEmail     = () => import('@/views/email/SendEmail')
-
 
 //Perfil
 const Recordatorio    = () => import('@/views/perfil/recordatorio/Index')
@@ -330,15 +323,25 @@ function configRoutes () {
           children: [
             {
               path: '',
-              component: Users,
+              component: Index,
               meta:{
                 requiresAdmin: true,
-                permissions : []
+                permissions : ['usuario.index']
               }
             },
             {
-              path: ':id',
-              meta: { label: 'User Details'},
+              path: 'registrar',
+              meta: { label: 'Registrar Usuario'},
+              name: 'Registrar Usuario',
+              component: CreateUser,
+              meta:{
+                requiresAdmin: true,
+                permissions : ['rol.index', 'usuario.create', 'rol.show', 'rol.edit']
+              }
+            },
+            {
+              path: 'detalles/:id',
+              meta: { label: 'Detalles Usuario'},
               name: 'User',
               component: User,
               meta:{
@@ -347,8 +350,8 @@ function configRoutes () {
               }
             },
             {
-              path: ':id/edit',
-              meta: { label: 'Edit User' },
+              path: 'editar/:id',
+              meta: { label: 'Editar Usuario' },
               name: 'EditUser',
               component: EditUser,
               meta:{
@@ -452,63 +455,7 @@ function configRoutes () {
             },
           ]
         },
-        {
-          path: 'email',
-          meta: { label: 'Emails'},
-          component: {
-            render (c) { return c('router-view') }
-          },
-          children: [
-            {
-              path: '',
-              component: Emails,
-              meta:{
-                requiresAdmin: true,
-                permissions : []
-              }
-            },
-            {
-              path: 'create',
-              meta: { label: 'Create Email Template' },
-              name: 'Create Email Template',
-              component: CreateEmail,
-              meta:{
-                requiresAdmin: true,
-                permissions : []
-              }
-            },
-            {
-              path: ':id',
-              meta: { label: 'Show Email Template'},
-              name: 'Show Email Tempalte',
-              component: ShowEmail,
-              meta:{
-                requiresAdmin: true,
-                permissions : []
-              }
-            },
-            {
-              path: ':id/edit',
-              meta: { label: 'Edit Email Tempalate' },
-              name: 'Edit Email Template',
-              component: EditEmail,
-              meta:{
-                requiresAdmin: true,
-                permissions : []
-              }
-            },
-            {
-              path: ':id/sendEmail',
-              meta: { label: 'Send Email' },
-              name: 'Send Email',
-              component: SendEmail,
-              meta:{
-                requiresAdmin: true,
-                permissions : []
-              }
-            },
-          ]
-        },
+   
       ]
     },
     {
@@ -523,6 +470,11 @@ function configRoutes () {
           path: '404',
           name: 'Page404',
           component: Page404
+        },
+        {
+          path: '104',
+          name: 'Page104',
+          component: Page104
         },
         {
           path: '500',

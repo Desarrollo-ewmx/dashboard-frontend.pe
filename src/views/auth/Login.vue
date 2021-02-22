@@ -2,52 +2,54 @@
   <CContainer class="d-flex align-items-center min-vh-100">
     <CRow>
       <CCol>
-        <CCardGroup>
-          <CCard>
-            <CForm @submit.prevent="login" method="POST">
-              <CCardBody>
-                <ul v-if="errors != null"><li class="text-danger" v-for="error in errors">{{ error[0] }}</li></ul>
-                <CRow>
-                  <CCol sm="12">
-                    <CInput label="Correo electronico *" type="email" placeholder="Correo electronico" maxlength="75" class="mb-0" autocomplete="username email" :lazy="false" :value.sync="$v.form.email.$model" :isValid="checkIfValid('email')">
-                      <template #prepend-content><CIcon name="cil-envelope-open"/></template>
-                    </CInput>
-                    <span class="text-danger float-right" v-if="!$v.form.email.required">Este es un campo obligatorio.</span>
-                    <span class="text-danger float-right" v-if="!$v.form.email.email">Este campo debe ser una dirección de correo electrónico válida.</span>
-                  </CCol>
-                  <CCol sm="12">
-                    <label>Contraseña *</label>
-                    <CInput type="password" placeholder="*******************" autocomplete="curent-password" maxlength="120" class="mb-0" :lazy="false" :value.sync="$v.form.password.$model" :isValid="checkIfValid('password')">
-                      <template #prepend-content><CIcon name="cil-shield-alt"/></template>
-                    </CInput>
-                    <span class="text-danger float-right" v-if="!$v.form.password.required">Este es un campo obligatorio.</span>
-                  </CCol> 
-                </CRow>
-                 <CRow class="pb-3 pt-3">
-                  <CCol sm="6">
-                    <CInputCheckbox label="Recuérdame" class="mb-4" :checked.sync="$v.form.check_recuerdame.$model" :isValid="checkIfValid('check_recuerdame')" custom />
-                  </CCol>
-                  <CCol sm="6" class="text-right">
-                    <b-link to="/password-restablecer">¿Olvidaste tu contraseña?</b-link>
-                  </CCol> 
-                </CRow>
-                <CRow class="content-center">
-                  <CCol sm="12">
-                    <b-spinner label="Loading..." variant="primary" :hidden="spinner"></b-spinner>
-                    <CButton type="submit" color="primary" class="w-100" :disabled="!isValid || submitted" :hidden="submitted"><CIcon name="cilArrowThickFromLeft"/> Acceder</CButton>
-                  </CCol>
-                </CRow>
-              </CCardBody>
-            </CForm>
-          </CCard>
-          <CCard color="dark" text-color="white" class="text-center py-5 d-md-down-none">
-            <img :src="sistema.img_login_rut+sistema.img_login_nom" fluid alt="Imagen" />
-          </CCard>
-        </CCardGroup>
+        <b-overlay :show="showForm" spinner-variant="primary" spinner-type="grow" spinner-small rounded="sm" opacity="0.27">
+          <CCardGroup>
+            <CCard>
+              <CForm @submit.prevent="login" method="POST">
+                <CCardBody>
+                  <ul v-if="errors != null"><li class="text-danger" v-for="error in errors">{{ error[0] }}</li></ul>
+                  <CRow>
+                    <CCol sm="12">
+                      <CInput label="Correo electronico *" type="email" placeholder="Correo electronico" maxlength="75" class="mb-0" autocomplete="username email" :lazy="false" :value.sync="$v.form.email.$model" :isValid="checkIfValid('email')">
+                        <template #prepend-content><CIcon name="cil-envelope-open"/></template>
+                      </CInput>
+                      <span class="text-danger float-right" v-if="!$v.form.email.required">Este es un campo obligatorio.</span>
+                      <span class="text-danger float-right" v-if="!$v.form.email.email">Este campo debe ser una dirección de correo electrónico válida.</span>
+                    </CCol>
+                    <CCol sm="12">
+                      <label>Contraseña *</label>
+                      <CInput type="password" placeholder="*******************" autocomplete="curent-password" maxlength="120" class="mb-0" :lazy="false" :value.sync="$v.form.password.$model" :isValid="checkIfValid('password')">
+                        <template #prepend-content><CIcon name="cil-shield-alt"/></template>
+                      </CInput>
+                      <span class="text-danger float-right" v-if="!$v.form.password.required">Este es un campo obligatorio.</span>
+                    </CCol> 
+                  </CRow>
+                  <CRow class="pb-3 pt-3">
+                    <CCol sm="6">
+                      <CInputCheckbox label="Recuérdame" class="mb-4" :checked.sync="$v.form.check_recuerdame.$model" :isValid="checkIfValid('check_recuerdame')" custom />
+                    </CCol>
+                    <CCol sm="6" class="text-right">
+                      <b-link to="/password-restablecer">¿Olvidaste tu contraseña?</b-link>
+                    </CCol> 
+                  </CRow>
+                  <CRow class="content-center">
+                    <CCol sm="12">
+                      <b-spinner label="Loading..." variant="primary" :hidden="spinner"></b-spinner>
+                      <CButton type="submit" color="primary" class="w-100" :disabled="!isValid || submitted" :hidden="submitted"><CIcon name="cilArrowThickFromLeft"/> Acceder</CButton>
+                    </CCol>
+                  </CRow>
+                </CCardBody>
+              </CForm>
+            </CCard>
+            <CCard color="dark" text-color="white" class="text-center py-5 d-md-down-none" :hidden="showForm">
+              <img :src="sistema.img_login_rut+sistema.img_login_nom" fluid alt="Imagen"/>
+            </CCard>
+          </CCardGroup>
+        </b-overlay>
       </CCol>
     </CRow>
-    <div class="fixed-bottom"> 
-      <TheFooter :sistema="sistema" :desarrollador="desarrollador" />
+    <div class="fixed-bottom" :hidden="showForm"> 
+      <TheFooter :sistema="sistema" :desarrollador="desarrollador"/>
     </div>
   </CContainer>
 </template>
@@ -70,6 +72,7 @@ export default {
     return {
       submitted: false,
       spinner: true,
+      showForm: true,
       form: this.getEmptyForm(),
       errors: [],
       sistema: [],
@@ -113,7 +116,7 @@ export default {
       self.spinner = false
       self.errors = []
         
-      axios.post(this.$apiAdress+'/api/login', self.form)
+      axios.post(this.$apiAdress+'/api/admin/login', self.form)
       .then(function (response) {
         dash.getDataStoreUser(response.data, true)
         self.$router.push({ path: 'inicio' });
@@ -127,9 +130,9 @@ export default {
     async getInfo() {
       let self = this;
       let resp = await sis.getInfo(this.$apiAdress);
-
       self.sistema = resp.sistema
       self.desarrollador = resp.desarrollador
+      self.showForm = false
     }
   }
 }

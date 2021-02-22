@@ -72,7 +72,7 @@ export default {
     },
     update() {
         let self = this;
-        axios.post( this.$apiAdress + '/api/notes/' + self.$route.params.id + '?token=' + localStorage.getItem("api_token"),
+        axios.post( this.$apiAdress + '/api/admin/notes/' + self.$route.params.id + '?token=' + localStorage.getItem("api_token"),
         {
             _method: 'PUT',
             title:            self.note.title,
@@ -105,7 +105,7 @@ export default {
   },
   mounted: function(){
     let self = this;
-    axios.get( this.$apiAdress + '/api/notes/' + self.$route.params.id + '/edit?token=' + localStorage.getItem("api_token"))
+    axios.get( this.$apiAdress + '/api/admin/notes/' + self.$route.params.id + '/edit?token=' + localStorage.getItem("api_token"))
     .then(function (response) {
         self.note = response.data.note;
         self.statuses = response.data.statuses;

@@ -1,7 +1,9 @@
 <template>
 <CForm @submit.prevent="store()" method="POST">
   <CCardBody>
-    <ul v-if="errors != null"><li class="text-danger" v-for="error in errors">{{ error[0] }}</li></ul>
+    <CRow v-if="errors != null" class="alert alert-danger p-0 m-0">
+      <CCol sm="12"><ul><li class=" text-danger" v-for="error in errors">{{ error[0] }}</li></ul></CCol>
+    </CRow>
     <CRow>
       <CCol sm="12">
           <CFormGroup wrapperClasses="input-group pt-2">
@@ -10,22 +12,17 @@
             <template #input>
               <multiselect
                 v-model="$v.form.input.$model"
-                :options="[]"
+                :options="inputs"
                 :group-select="true"
-                :style="inputStyle"
                 tag-placeholder="Sin coincidencias"
                 placeholder="Buscar . . ."
                 select-label="Seleccionar"
                 selected-label="Seleccionado"
                 deselect-label="Quitar selección"
                 label="text"
-                track-by="value"
                 :taggable="true"
                 class="form-control border-0 p-0 m-0"
-              /><!-- 
-                :multiple="true"
-                :max="1"
-                Falta traducir maximo de elementos seleccionados y cuando no hay resultados en ayyar es vacio-->
+              />
             </template>
           </CFormGroup>
           <span class="text-danger float-right" v-if="!$v.form.input.required">Este es un campo obligatorio.</span>
@@ -66,6 +63,7 @@ import { required, maxLength } from "vuelidate/lib/validators"
 
 export default {
   name: 'CatCreateFields',
+  props: ['opcion_alert'],
   components: {
     Multiselect
   },
@@ -74,7 +72,7 @@ export default {
       submitted: false,
       spinner: true,
       form: this.getEmptyForm(),
-      errors: [],
+      errors: null,
       inputs: opcSelect.catalogo
     }
   },
@@ -114,19 +112,19 @@ export default {
       let self        = this;
       self.submitted  = true
       self.spinner    = false
-      self.errors     = []
+      self.errors     = null
       let val_ant     = self.form.input
       self.form.input = self.form.input.value
 
-      axios.post(this.$apiAdress+'/api/catalogo/almacenar?token='+localStorage.getItem("api_token"), self.form
+      axios.post(this.$apiAdress+'/api/admin/catalogo/almacenar?token='+localStorage.getItem("api_token"), self.form
       ).then(function (response) {
         self.clearForm()
-        self.submitted = false;
+        self.submitted = false
         self.spinner = true
-        alert.response200('¡Registrado exitosamente!', `<a href="detalles/${response.data.id.toString()}"><b>Ver registro</b></a>`)
+        alert.response200(self.opcion_alert, '¡Registrado exitosamente!', `<a href="detalles/${response.data.id.toString()}"><b>Ver registro</b></a>`)
       }).catch(function (error) {
         self.form.input = val_ant
-        self.submitted = false;
+        self.submitted = false
         self.spinner = true
         self.errors = alert.responseCatch(error, 'Code #1011');
       });
