@@ -5,7 +5,7 @@
       <CCardHeader class="p-1">
         <CatMenu :actCC="true" />
       </CCardHeader>
-      <CatCreateFields/>
+      <CatCreateFields :opcion_alert="2" />
     </CCard>
   </CCol>
 </CRow>

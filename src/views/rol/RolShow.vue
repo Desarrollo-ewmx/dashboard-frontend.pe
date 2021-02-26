@@ -19,7 +19,7 @@
 <script>
 import axios from 'axios'
 export default {
-  name: 'Role',
+  name: 'RolShow',
   /*
   props: {
     caption: {
@@ -40,7 +40,7 @@ export default {
   },
   mounted: function(){
     let self = this;
-    axios.get(   this.$apiAdress + '/api/admin/roles/' + self.$route.params.id + '?token=' + localStorage.getItem("api_token"))
+    axios.get(   this.$apiAdress + '/api/admin/rol/' + self.$route.params.id + '?token=' + localStorage.getItem("api_token"))
     .then(function (response) {
       self.name = response.data.name
     }).catch(function (error) {

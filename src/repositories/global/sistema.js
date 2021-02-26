@@ -4,11 +4,11 @@ import alert from '@/repositories/global/alert'
 
 const getInfo = async (apiAdress) => {
 	try {
-		let resp = await axios.get(apiAdress+'/api/admin/sistema/default');
-		localStorage.setItem("sistema", JSON.stringify(resp.data.sistema));
-		localStorage.setItem("desarrollador", JSON.stringify(resp.data.desarrollador));
+		let response = await axios.post(apiAdress+'/api/sistema/default');
+		localStorage.setItem("sistema", JSON.stringify(response.data.sistema));
+		localStorage.setItem("desarrollador", JSON.stringify(response.data.desarrollador));
 
-		return resp.data
+		return response.data
 	}catch(error) {
 		alert.responseCatch(error, 'Code #1010')
 	}

@@ -2,42 +2,80 @@ import "regenerator-runtime/runtime";
 import axios from "axios";
 import alert from '@/repositories/global/alert'
 
-const showRegistro = (self, id) => {
-  self.$router.push({path: `/sucursales/detalles/${id.toString()}`});
+const urlAPI = '/api/admin/sucursal';
+
+const getPagination = async (self) => {
+	try {
+    let response = await axios.post(self.$apiAdress+urlAPI+'?token='+localStorage.getItem("api_token")+'&page='+self.activePage, {
+      sorter:       self.sorter,
+      tableFilter:  self.tableFilter,
+      columnFilter: self.columnFilter,
+      itemsLimit:   self.itemsLimit,
+      startDate:    self.startDate,
+      endDate:      self.endDate
+    })
+
+		return response.data
+	}catch(error) {
+		alert.responseCatch(error, 'Code #1006')
+	}
 }
-const editRegistro = (self, id) => {
-  self.$router.push({path: `/sucursales/editar/${id.toString()}`});
+const storeRegistro = async (self) => {
+  self.submitted    = true
+  self.spinner      = true
+  self.errors       = null
+  self.form.ser_cot = self.form.ser_cot.value
+
+	try {
+    let response = await axios.post(self.$apiAdress+urlAPI+'/almacenar?token='+localStorage.getItem("api_token"), self.form);
+
+    return response.data
+	}catch(error) {
+    self.form.ser_cot = self.form.val_ant;
+    self.submitted    = false
+    self.spinner      = false
+		self.errors       = alert.responseCatch(error, 'Code #1008');
+	}
+}
+const updateRegistro = async (self) => {
+  self.submitted  = true
+  self.spinner    = true
+  self.errors     = null
+  self.form.ser_cot = self.form.ser_cot.value
+
+	try {
+    let response = await axios.post(self.$apiAdress+urlAPI+'/actualizar/'+self.$route.params.id+'?token='+localStorage.getItem("api_token"), self.form);
+     
+    return response.data
+	}catch(error) {
+    self.form.ser_cot = self.form.val_ant;
+    self.submitted    = false
+    self.spinner      = false
+    self.errors       = alert.responseCatch(error, 'Code #1008');
+	}
 }
 const getRegistro = async (self) => {
 	try {
-    let resp = await axios.get(self.$apiAdress+'/api/admin/sucursal/detalles/'+self.$route.params.id+'?token='+localStorage.getItem("api_token"));
+    let response = await axios.post(self.$apiAdress+urlAPI+'/get/'+self.$route.params.id+'?token='+localStorage.getItem("api_token"));
     
-		return resp.data
+		return response.data
 	}catch(error) {
 		alert.responseCatch(error, 'Code #1012')
 	}
 }
-const getSeries = async (self) => {
+const deleteRegistro = async (self, id) => {
 	try {
-    let resp = await axios.post(self.$apiAdress+'/api/admin/catalogo/getAll?token='+localStorage.getItem("api_token"), { input: 'Cotizaciones (Serie)' });
-    
-    let series = []
-    resp.data.forEach(function(valor, indice, array) {
-      series.push({
-        value:  valor.value,
-        text:   valor.text
-      });
-    });
+    let response = await axios.delete(self.$apiAdress+urlAPI+'/eliminar/'+id+'?token='+localStorage.getItem("api_token"));
 
-		return series
+		return response
 	}catch(error) {
-		alert.responseCatch(error, 'Code #1005')
+		alert.responseCatch(error, 'Code #1004')
 	}
 }
-
 export default ({
+  getPagination,
+  storeRegistro,
+  updateRegistro,
   getRegistro,
-  getSeries,
-  showRegistro,
-  editRegistro
+  deleteRegistro
 });

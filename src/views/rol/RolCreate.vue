@@ -1,10 +1,10 @@
 <template>
   <CRow>
     <CCol col="12" lg="6">
-      <CCard>
+      <CCard no-header>
         <CCardBody>
           <h3>
-            Edit Role id:  {{ $route.params.id }}
+            Create Role
           </h3>
           <CAlert
             :show.sync="dismissCountDown"
@@ -13,8 +13,10 @@
           >
             ({{dismissCountDown}}) {{ message }}
           </CAlert>
-            <CInput label="Name" type="text" placeholder="Name" v-model="role.name"/>
-          <CButton color="primary" @click="update()">Save</CButton>
+
+          <CInput label="Name" type="text" placeholder="Name" v-model="role.name"></CInput>
+
+          <CButton color="primary" @click="store()">Create</CButton>
           <CButton color="primary" @click="goBack">Back</CButton>
         </CCardBody>
       </CCard>
@@ -25,7 +27,7 @@
 <script>
 import axios from 'axios'
 export default {
-  name: 'EditRole',
+  name: 'RolCreate',
   /*
   props: {
     caption: {
@@ -37,27 +39,35 @@ export default {
   data: () => {
     return {
         role: {
-          id: null,
           name: '',
         },
         message: '',
         dismissSecs: 7,
         dismissCountDown: 0,
+        showDismissibleAlert: false
     }
   },
   methods: {
     goBack() {
       this.$router.go(-1)
+      // this.$router.replace({path: '/users'})
     },
-    update() {
+    store() {
         let self = this;
-        axios.post(   this.$apiAdress + '/api/admin/roles/' + self.$route.params.id + '?token=' + localStorage.getItem("api_token"),
-        {
-            _method: 'PUT',
-            name:  self.role.name
-        })
+        axios.post(   this.$apiAdress + '/api/admin/rol?token=' + localStorage.getItem("api_token"),
+          {
+            name: self.role.name,
+          }
+        )
         .then(function (response) {
-            self.message = 'Successfully updated role.';
+            self.note = {
+              title: '',
+              content: '',
+              applies_to_date: '',
+              status_id: null,
+              note_type: '',
+            };
+            self.message = 'Successfully created role.';
             self.showAlert();
         }).catch(function (error) {
             if(error.response.data.message == 'The given data was invalid.'){
@@ -69,10 +79,13 @@ export default {
               }
               self.showAlert();
             }else{
-              console.log(error); 
-              self.$router.push({ path: '/login' }); 
+              console.log(error);
+            //  self.$router.push({ path: 'login' }); 
             }
         });
+    },
+    countDownChanged (dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
     },
     showAlert () {
       this.dismissCountDown = this.dismissSecs
@@ -80,22 +93,14 @@ export default {
   },
   mounted: function(){
     let self = this;
-    axios.get(   this.$apiAdress + '/api/admin/roles/' + self.$route.params.id + '/edit?token=' + localStorage.getItem("api_token"))
+    axios.get(   this.$apiAdress + '/api/admin/rol/create?token=' + localStorage.getItem("api_token"))
     .then(function (response) {
-        self.role = response.data;
+        self.statuses = response.data;
     }).catch(function (error) {
         console.log(error);
-        self.$router.push({ path: '/login' });
+     //   self.$router.push({ path: 'login' });
     });
   }
 }
-
-/*
-      items: (id) => {
-        const user = usersData.find( user => user.id.toString() === id)
-        const userDetails = user ? Object.entries(user) : [['id', 'Not found']]
-        return userDetails.map(([key, value]) => {return {key: key, value: value}})
-      },
-*/
 
 </script>

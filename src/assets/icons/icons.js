@@ -1,4 +1,5 @@
 import {
+  cilSync,
   cilBook,
   cilBuilding,
   cibCircle,
@@ -140,6 +141,7 @@ import { logo } from './logo'
 
 
 export const iconsSet = Object.assign({}, { logo }, {
+  cilSync,
   cilBook,
   cilBuilding,
   cibCircle,

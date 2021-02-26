@@ -1,9 +1,9 @@
 <template>
   <CNav variant="pills">
-    <CNavItem :hidden="permisos(['catalogo.create','catalogo.show','catalogo.edit', 'catalogo.destroy'])" :active="actCL" to="/catalogos" :class="actCL ? 'text-white ' : ''">
+    <CNavItem v-if="permisos(['catalogo.create','catalogo.show','catalogo.edit', 'catalogo.destroy'])" :active="actCL" to="/catalogos" :class="actCL ? 'text-white ' : ''">
       <CIcon name="cilList"/> Lista de catálogos
     </CNavItem>
-    <CNavItem :hidden="permisos(['catalogo.create'])" :active="actCC" to="/catalogos/registrar" :class="actCC ? 'text-white' : ''">
+    <CNavItem v-if="permisos(['catalogo.create'])" :active="actCC" to="/catalogos/registrar" :class="actCC ? 'text-white' : ''">
       <b-icon icon="plus-circle"></b-icon> Registrar catálogo
     </CNavItem>
   </CNav>
@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     permisos(permisos) {
-      return !check.permiso(permisos)
+      return check.permiso(permisos)
     }   
   },
 }

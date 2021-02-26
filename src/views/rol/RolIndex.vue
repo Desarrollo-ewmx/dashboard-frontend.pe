@@ -1,7 +1,7 @@
 <template>
 <CCard class="shadow">
   <CCardHeader class="p-1">
-    <SucMenu :actSL="true" />
+    <RolMenu :actRL="true" />
   </CCardHeader>
   <CCardBody>
     <CRow>
@@ -54,9 +54,9 @@
 </template>
 
 <script>
-import repoSuc from './Repositories'
+import repoRol from './Repositories'
 import repoGlo from '@/repositories/global/global'
-import SucMenu from './SucMenu'
+import RolMenu from './RolMenu'
 import check from '@/repositories/global/check'
 import alert from '@/repositories/global/alert'
 import Swal from 'sweetalert2'
@@ -64,7 +64,7 @@ import Swal from 'sweetalert2'
 export default {
   name: 'SucIndex',
   components: {
-    SucMenu
+    RolMenu
   },
   data () {
     return {
@@ -92,7 +92,7 @@ export default {
       let self      = this;
       self.loading  = true
       self.items    = [];
-      let data      = await repoSuc.getPagination(self)
+      let data      = await repoRol.getPagination(self)
       self.texto    = `Mostrando desde ${data.from} hasta ${data.to} de ${data.total} registros.`
       self.items    = self.items.concat(data.data)
       self.maxPages = data.last_page
@@ -112,7 +112,7 @@ export default {
 
       if(result.value) {
         let self = this;
-        let data = await repoSuc.deleteRegistro(self, id)
+        let data = await repoRol.deleteRegistro(self, id)
         if(data != undefined) {
           await alert.response200(3, '¡Registro eliminado exitosamente!','')
           await self.getSucursales();

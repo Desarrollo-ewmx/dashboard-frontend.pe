@@ -52,7 +52,7 @@
 import axios from 'axios'
 
 export default {
-  name: 'Users',
+  name: 'UsuIndex',
   data: () => {
     return {
       items: [],

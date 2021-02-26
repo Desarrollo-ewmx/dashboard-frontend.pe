@@ -7,9 +7,9 @@
       <div class="c-body">
         <main class="c-main">
           <CContainer fluid>
-            <transition name="fade">
+            <vue-page-transition name="fade-in-down">
               <router-view></router-view>
-            </transition>
+            </vue-page-transition>
           </CContainer>
         </main>
         <TheFooter :sistema="sistema" :desarrollador="desarrollador" />

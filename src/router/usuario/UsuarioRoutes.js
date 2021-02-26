@@ -1,41 +1,55 @@
-
-const Users = () => import('@/views/users/Users')
-const User = () => import('@/views/users/User')
-const EditUser = () => import('@/views/users/EditUser')
-const TheContainer = () => import('@/containers/TheContainer')
+const TheContainer  = () => import('@/containers/TheContainer')
+const UsuIndex      = () => import('@/views/usuario/UsuIndex')
+const UsuCreate     = () => import('@/views/usuario/UsuCreate')
+const UsuShow       = () => import('@/views/usuario/UsuShow')
+const UsuEdit       = () => import('@/views/usuario/UsuEdit')
 
 const UsuarioRoutes = {
   path: '/usuarios',
-  meta: { label: 'Usuarios'},
   redirect: '/inicio',
+  meta: { label: 'Usuarios'},
   component: TheContainer,
   children: [
     {
       path: '',
-      component: Users,
+      component: UsuIndex,
       meta:{
+        title: 'Usuarios',
         requiresAdmin: true,
-        permissions : []
+        permissions : ['usuario.create','usuario.show','usuario.edit', 'usuario.destroy']
       }
     },
     {
-      path: ':id',
-      meta: { label: 'User Details'},
-      name: 'User',
-      component: User,
+      path: 'registrar',
+      meta: { label: 'Registrar' },
+      name: 'Registrar Usuario',
+      component: UsuCreate,
       meta:{
+        title: 'Registrar Usuario',
         requiresAdmin: true,
-        permissions : []
+        permissions : ['usuario.create']
       }
     },
     {
-      path: ':id/edit',
-      meta: { label: 'Edit User' },
-      name: 'EditUser',
-      component: EditUser,
+      path: 'detalles/:id',
+      meta: { label: 'Detalles'},
+      name: 'Detalles Usuario',
+      component: UsuShow,
       meta:{
+        title: 'Detalles Usuario',
         requiresAdmin: true,
-        permissions : []
+        permissions : ['usuario.show']
+      }
+    },
+    {
+      path: 'editar/:id',
+      meta: { label: 'Editar' },
+      name: 'Editar Usuario',
+      component: UsuEdit,
+      meta:{
+        title: 'Editar Usuario',
+        requiresAdmin: true,
+        permissions : ['usuario.edit']
       }
     },
   ] 

@@ -2,10 +2,11 @@
   <CContainer class="d-flex align-items-center min-vh-100">
     <CRow class="w-100 justify-content-center">
       <CCol md="6">
+        <div class="w-100">
         <div class="clearfix">
-          <h1 class="float-left display-3 mr-4">500</h1>
-          <h4 class="pt-3">Houston, we have a problem!</h4>
-          <p class="text-muted">The page you are looking for is temporarily unavailable.</p>
+          <h1 class="float-left display-3 mr-4">401</h1>
+          <h4 class="pt-3">Oops! You're lost.</h4>
+          <p class="text-muted">No Autorizado.</p>
         </div>
         <CInput
           class="mb-3"
@@ -16,6 +17,7 @@
             <CButton color="info">Search</CButton>
           </template>
         </CInput>
+      </div>
       </CCol>
     </CRow>
   </CContainer>
@@ -23,6 +25,6 @@
 
 <script>
 export default {
-  name: 'Page500'
+  name: 'Page104'
 }
 </script>

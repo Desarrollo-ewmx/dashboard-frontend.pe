@@ -1,14 +1,18 @@
 <template>
 <div>
-  <CRow>
-    <CCol sm="6" v-if="nom_arc != null">
-      <b-spinner label="Loading..." variant="primary" :hidden="spinner"></b-spinner>
-      <CButton color="danger" title="Recargar" class="mr-4 w-100" @click="deleteArchivo()" :hidden="!spinner"><CIcon name="cilTrash"/> Quitar</CButton>
-    </CCol>
-    <CCol sm="6">
-      <CButton v-b-modal.GloModalCreateOneImagen color="info" title="Agregar" class="p-2 m-0 w-100"><b-icon icon="plus-circle" class="h5 p-0 m-0" /> Cargar</CButton>
-    </CCol>
-  </CRow>
+  <b-card :img-src="getRutaNomArchivo()" style="max-width:20rem;" class="p-0 m-0" img-alt="Image" img-top no-body>
+    <template #header>
+      <CRow>
+        <CCol sm="6" v-if="nom_arc != null">
+          <CButton color="danger" title="Recargar" class="mr-4 w-100" @click="deleteArchivo()" v-if="!spinner"><CIcon name="cilTrash"/> Quitar</CButton>
+          <b-spinner label="Loading..." variant="primary" v-if="spinner"></b-spinner>
+        </CCol>
+        <CCol sm="6">
+          <CButton v-b-modal.GloModalCreateOneImagen color="info" title="Agregar" class="p-2 m-0 w-100"><b-icon icon="plus-circle" class="h5 p-0 m-0" /> Cargar</CButton>
+        </CCol>
+      </CRow>
+    </template>
+  </b-card>
 
   <b-modal id="GloModalCreateOneImagen" title="CARGAR ARCHIVO" content-class="shadow" body-class="p-0 m-0" size="sm" header-bg-variant="info" header-class="p-2" hide-backdrop scrollable hide-footer>
     <CRow>
@@ -29,15 +33,17 @@ import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
 export default {
   name: 'GloModalCreateOneImagen',
-  props: ['url', 'nom_arc'],
+  props: ['urlAPI', 'rut_arc', 'nom_arc'],
   components: {
     vueDropzone
   },
   data() {
     return {
-      spinner: true,
+      spinner: false,
+      rut_nom: null,
+      sistema: JSON.parse(localStorage.getItem("sistema")),
       dropzoneOptions: {
-        url: this.$apiAdress+'/api/admin/imagen/one/almacenar/'+this.url,
+        url: this.$apiAdress+'/api/admin/imagen/one/almacenar/'+this.urlAPI,
         thumbnailWidth: 150,
         maxFilesize: 1,
         headers: { Authorization: `Bearer ${localStorage.getItem("api_token")}` },
@@ -59,11 +65,23 @@ export default {
     }
   },
   methods: {
-    dataArchivo(file, response) {
-      this.$emit('sucursalEvent', [response,'almacenar'])
+    getRutaNomArchivo() {
+      if(this.nom_arc != null)
+        return this.rut_arc+this.nom_arc
+      else
+        return this.sistema.def_img_rut+this.sistema.def_img_nom
     },
-    errorServidor(archivo, mensaje, xhr){
-      console.log(mensaje)
+    dataArchivo(file, response) {
+      this.$emit('response', response)
+      alert.response200(1, '¡Archivo guardado exitosamente!','')
+    },
+    errorServidor(archivo, mensaje, error) {
+      if(mensaje.response != null)
+        alert.responseCatch(mensaje, 'Code #1014')
+      else if(mensaje.errors != null)
+        archivo.previewElement.querySelectorAll('.dz-error-message span')[0].textContent = mensaje.errors.file[0];
+      else
+        archivo.previewElement.querySelectorAll('.dz-error-message span')[0].textContent = mensaje.message;
     },
     deleteArchivo() {
       Swal.fire({
@@ -78,14 +96,15 @@ export default {
       }).then((result) => {
         if(result.isConfirmed) {
           let self      = this;
-          self.spinner  = false
-          axios.post(self.$apiAdress+'/api/admin/imagen/eliminar/'+self.url+'?token='+localStorage.getItem("api_token"), {
+          self.spinner  = true
+          axios.post(self.$apiAdress+'/api/admin/imagen/eliminar/'+self.urlAPI+'?token='+localStorage.getItem("api_token"), {
             _method: 'DELETE'
           }).then(function (response) {
-            self.spinner = true
-            self.$emit('sucursalEvent', [response,'eliminar'])
+            self.spinner = false
+            self.$emit('response', response.data)
+            alert.response200(1, '¡Archivo eliminado exitosamente!','')
           }).catch(function (error) {
-            self.spinner = true
+            self.spinner = false
             alert.responseCatch(error, 'Code #1013');
           });
         }

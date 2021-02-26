@@ -12,7 +12,7 @@
                     { key: 'inpu', label: 'INPUT' },
                     { key: 'ant', label: 'ANTERIOR' },
                     { key: 'nuev', label: 'NUEVO' },
-                    { key: 'created_at', label: 'FECHA' },
+                    { key: 'created_at', label: 'FECHA DE REGISTRO' },
                   ]"
           :noItemsView="{ 
                   noResults: 'No hay resultados de filtrado disponibles', 
@@ -27,15 +27,19 @@
           >
           <template #email_registro="{item}">
             <td>
-              <a :href="showUser(item.user_id)" v-if="!permisos(['usuario.show'])"  target="_blank">{{ item.email_registro }}</a>
+              <CLink :to="{ name: 'Detalles Usuario', params: { id: item.user_id }}" v-if="permisos(['usuario.show'])" target="_blank" v-text="item.email_registro" />
               <span v-else>{{ item.email_registro }}</span>
             </td>
           </template>
           <template #actividad_id="{item}">
             <td>
-              <a :href="showRegistro(item.rut,item.id)" v-if="!permisos(item.perm.split(','))" target="_blank">{{ item.actividad_id }}</a>
+              <CLink :to="{ name: item.rut, params: { id: item.id }}" v-if="permisos(item.perm.split(','))" target="_blank" v-text="item.actividad_id" />
               <span v-else>{{ item.actividad_id }}</span>
             </td>
+          </template>
+          <template #created_at-filter="{item}">
+            <span class="pantallaMax985px">Desde: </span><input type="date" :value="startDate" @change="setDateFilter" class="mr-2" />
+            <span class="pantallaMax985px">Hasta: </span><input type="date" :value="endDate" @change="e => setDateFilter(e, 'end')" />
           </template>
         </CDataTable>
       </perfect-scrollbar>
@@ -50,6 +54,7 @@
 import axios from 'axios'
 import alert from '@/repositories/global/alert'
 import check from '@/repositories/global/check'
+import repoGlo from '@/repositories/global/global'
 
 export default {
   name: 'ActTable',
@@ -63,8 +68,10 @@ export default {
       tableFilter: '',
       columnFilter: {},
       itemsLimit: 50,
+      startDate: new Date('2019-01-01').toISOString().substr(0, 10),
+      endDate: repoGlo.diaMasAFecha(),
       loading: false,
-      texto: null,
+      texto: null
     }
   },
   mounted: function() {
@@ -72,13 +79,7 @@ export default {
   },
   methods: {
     permisos(permisos) {
-      return !check.permiso(permisos)
-    },
-    showRegistro(ruta, id) {
-      return `${ruta+id.toString()}`
-    },
-    showUser(id) {
-      return `/usuarios/detalles/${id.toString()}`
+      return check.permiso(permisos)
     },
     getActividades() {
       let self = this;
@@ -90,7 +91,9 @@ export default {
         tableFilter:  self.tableFilter,
         columnFilter: self.columnFilter,
         itemsLimit:   self.itemsLimit,
-        id_modelo:    self.id_modelo
+        id_modelo:    self.id_modelo,
+        startDate:    self.startDate,
+        endDate:      self.endDate
       }).then(function (response) {
         if(isNaN(parseFloat(response.data.from))) { response.data.from = 0; }
         if(isNaN(parseFloat(response.data.to))) { response.data.to = 0; }
@@ -100,13 +103,21 @@ export default {
         self.loading = false
       }).catch(function (error) {
         self.loading = false
-        alert.responseCatch(error, 'Code #1006') 
+        alert.responseCatch(error, 'Code #1002') 
       });
     },
     changeItemsLimit(val) {
       this.itemsLimit = val;
       this.getActividades();
     },
+    setDateFilter(e, end) {
+      if(end) {
+        this.endDate = e.target.value
+      } else {
+        this.startDate = e.target.value
+      }
+      this.getActividades();
+    }
   },
   watch: {
     activePage() {

@@ -1,5 +1,5 @@
-const TheContainer = () => import('@/containers/TheContainer')
-const Dashboard = () => import('@/views/Dashboard')
+const TheContainer  = () => import('@/containers/TheContainer')
+const Dashboard     = () => import('@/views/Dashboard')
 
 const InicioRoutes = {
   path: '/',
@@ -12,6 +12,7 @@ const InicioRoutes = {
       name: 'Inicio',
       component: Dashboard,
       meta:{
+        title: 'Inicio',
         requiresAdmin: true,
         permissions : ['global']
       }

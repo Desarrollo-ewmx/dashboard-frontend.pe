@@ -41,11 +41,8 @@
   <CCardFooter>
     <CRow class="content-center">
       <CCol>
-        <CButton color="secondary" class="w-75" @click="goBack"><CIcon name="cilArrowThickToLeft"/> Regresar</CButton>
-      </CCol>
-      <CCol>
-        <b-spinner label="Loading..." variant="primary" :hidden="spinner"></b-spinner>
-        <CButton type="submit" color="primary" class="w-100" :disabled="!isValid || submitted" :hidden="submitted"><CIcon name="cilSave"/> Registrar</CButton>
+        <b-spinner label="Loading..." variant="primary" v-if="spinner"></b-spinner>
+        <CButton type="submit" color="primary" class="w-75" :disabled="!isValid || submitted" v-if="!submitted"><CIcon name="cilSave"/> Registrar</CButton>
       </CCol>
     </CRow>
   </CCardFooter>
@@ -63,23 +60,22 @@ import { required, maxLength } from "vuelidate/lib/validators"
 
 export default {
   name: 'CatCreateFields',
-  props: ['opcion_alert'],
+  props: ['opcion_alert', 'val_input'],
   components: {
     Multiselect
   },
   data() {
     return {
       submitted: false,
-      spinner: true,
+      spinner: false,
       form: this.getEmptyForm(),
       errors: null,
       inputs: opcSelect.catalogo
     }
   },
   computed: {
-    formString() { return JSON.stringify(this.form, null, 4) },
+    //formString() { return JSON.stringify(this.form, null, 4) },
     isValid() { return !this.$v.form.$invalid },
-    isDirty() { return this.$v.form.$anyDirty },
   },
   mixins: [validationMixin],
   validations: {
@@ -92,7 +88,7 @@ export default {
     goBack() { this.$router.go(-1) },
     getEmptyForm() {
       return {
-        input: '',
+        input: this.val_input,
         valor: ''
       }
     },
@@ -111,7 +107,7 @@ export default {
     store() {
       let self        = this;
       self.submitted  = true
-      self.spinner    = false
+      self.spinner    = true
       self.errors     = null
       let val_ant     = self.form.input
       self.form.input = self.form.input.value
@@ -120,12 +116,13 @@ export default {
       ).then(function (response) {
         self.clearForm()
         self.submitted = false
-        self.spinner = true
-        alert.response200(self.opcion_alert, '¡Registrado exitosamente!', `<a href="detalles/${response.data.id.toString()}"><b>Ver registro</b></a>`)
+        self.spinner = false
+        self.$emit('response', response.data)
+        alert.response200(self.opcion_alert, '¡Registrado exitosamente!', response.data.id)
       }).catch(function (error) {
         self.form.input = val_ant
         self.submitted = false
-        self.spinner = true
+        self.spinner = false
         self.errors = alert.responseCatch(error, 'Code #1011');
       });
     },

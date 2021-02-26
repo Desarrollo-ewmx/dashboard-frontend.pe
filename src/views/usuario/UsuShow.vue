@@ -29,7 +29,7 @@
 <script>
 import axios from 'axios'
 export default {
-  name: 'User',
+  name: 'UsuShow',
   data: () => {
     return {
       items: [],

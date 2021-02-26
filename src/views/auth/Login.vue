@@ -2,7 +2,7 @@
   <CContainer class="d-flex align-items-center min-vh-100">
     <CRow>
       <CCol>
-        <b-overlay :show="showForm" spinner-variant="primary" spinner-type="grow" spinner-small rounded="sm" opacity="0.27">
+        <b-overlay :show="!showForm" spinner-variant="primary" spinner-type="grow" spinner-small rounded="sm" opacity="0.27">
           <CCardGroup>
             <CCard>
               <CForm @submit.prevent="login" method="POST">
@@ -34,21 +34,21 @@
                   </CRow>
                   <CRow class="content-center">
                     <CCol sm="12">
-                      <b-spinner label="Loading..." variant="primary" :hidden="spinner"></b-spinner>
-                      <CButton type="submit" color="primary" class="w-100" :disabled="!isValid || submitted" :hidden="submitted"><CIcon name="cilArrowThickFromLeft"/> Acceder</CButton>
+                      <b-spinner label="Loading..." variant="primary" v-if="spinner"></b-spinner>
+                      <CButton type="submit" color="primary" class="w-100" :disabled="!isValid || submitted" v-if="!submitted"><CIcon name="cilArrowThickFromLeft"/> Acceder</CButton>
                     </CCol>
                   </CRow>
                 </CCardBody>
               </CForm>
             </CCard>
-            <CCard color="dark" text-color="white" class="text-center py-5 d-md-down-none" :hidden="showForm">
+            <CCard color="dark" text-color="white" class="text-center py-5 d-md-down-none" v-if="showForm">
               <img :src="sistema.img_login_rut+sistema.img_login_nom" fluid alt="Imagen"/>
             </CCard>
           </CCardGroup>
         </b-overlay>
       </CCol>
     </CRow>
-    <div class="fixed-bottom" :hidden="showForm"> 
+    <div class="fixed-bottom" v-if="showForm"> 
       <TheFooter :sistema="sistema" :desarrollador="desarrollador"/>
     </div>
   </CContainer>
@@ -71,8 +71,8 @@ export default {
   data() {
     return {
       submitted: false,
-      spinner: true,
-      showForm: true,
+      spinner: false,
+      showForm: false,
       form: this.getEmptyForm(),
       errors: [],
       sistema: [],
@@ -83,9 +83,8 @@ export default {
     this.getInfo()
   },
   computed: {
-    formString() { return JSON.stringify(this.form, null, 4) },
+    //formString() { return JSON.stringify(this.form, null, 4) },
     isValid() { return !this.$v.form.$invalid },
-    isDirty() { return this.$v.form.$anyDirty },
   },
   mixins: [validationMixin],
   validations: {
@@ -113,26 +112,26 @@ export default {
     login() {
       let self = this;
       self.submitted = true
-      self.spinner = false
+      self.spinner = true
       self.errors = []
         
-      axios.post(this.$apiAdress+'/api/admin/login', self.form)
+      axios.post(this.$apiAdress+'/api/login', self.form)
       .then(function (response) {
         dash.getDataStoreUser(response.data, true)
         self.$router.push({ path: 'inicio' });
       })
       .catch(function (error) {
-        self.submitted = false
-        self.spinner = true
-        self.errors = alert.responseCatch(error, 'Code #1003')
+        self.submitted  = false
+        self.spinner    = false
+        self.errors     = alert.responseCatch(error, 'Code #1003')
       });
     },
     async getInfo() {
-      let self = this;
-      let resp = await sis.getInfo(this.$apiAdress);
-      self.sistema = resp.sistema
-      self.desarrollador = resp.desarrollador
-      self.showForm = false
+      let self            = this;
+      let data            = await sis.getInfo(this.$apiAdress);
+      self.sistema        = data.sistema
+      self.desarrollador  = data.desarrollador
+      self.showForm       = true
     }
   }
 }

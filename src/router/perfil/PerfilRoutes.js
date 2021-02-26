@@ -1,41 +1,22 @@
-const Recordatorio    = () => import('@/views/perfil/recordatorio/Index')
-const Tablero         = () => import('@/views/perfil/recordatorio/Index')
+const TheContainer    = () => import('@/containers/TheContainer')
 const PerfilDetalles  = () => import('@/views/perfil/recordatorio/Index')
 const PerfilEditar    = () => import('@/views/perfil/recordatorio/Index')
-const TheContainer = () => import('@/containers/TheContainer')
+const Recordatorio    = () => import('@/views/perfil/recordatorio/Index')
+const Tablero         = () => import('@/views/perfil/recordatorio/Index')
 
 const PerfilRoutes = {
   path: '/perfil',
-  meta: { label: 'Perfil'},
   redirect: '/inicio',
+  meta: { label: 'Perfil'},
   component: TheContainer,
   children: [
-    {
-      path: 'recordatorios',
-      meta: { label: 'Recordatorios' },
-      name: 'Recordatorios',
-      component: Recordatorio,
-      meta:{
-        requiresAdmin: true,
-        permissions : ['global']
-      }
-    },
-    {
-      path: 'tablero',
-      meta: { label: 'Tablero' },
-      name: 'PerfilTablero',
-      component: Tablero,
-      meta:{
-        requiresAdmin: true,
-        permissions : ['global']
-      }
-    },
     {
       path: 'detalles',
       meta: { label: 'Detalles' },
       name: 'Detalles',
       component: PerfilDetalles,
       meta:{
+        title: 'Detalles Perfil',
         requiresAdmin: true,
         permissions : ['global']
       }
@@ -46,6 +27,29 @@ const PerfilRoutes = {
       name: 'Editar',
       component: PerfilEditar,
       meta:{
+        title: 'Editar Perfil',
+        requiresAdmin: true,
+        permissions : ['global']
+      }
+    },
+    {
+      path: 'recordatorios',
+      meta: { label: 'Recordatorios' },
+      name: 'Recordatorios',
+      component: Recordatorio,
+      meta:{
+        title: 'Recordatorios',
+        requiresAdmin: true,
+        permissions : ['global']
+      }
+    },
+    {
+      path: 'tablero',
+      meta: { label: 'Tablero' },
+      name: 'Tablero',
+      component: Tablero,
+      meta:{
+        title: 'Tablero',
         requiresAdmin: true,
         permissions : ['global']
       }

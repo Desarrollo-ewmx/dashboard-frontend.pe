@@ -1,12 +1,12 @@
 <template>
-  <CNav variant="pills">
-    <CNavItem :hidden="permisos(['sucursal.create','sucursal.show','sucursal.edit', 'sucursal.destroy'])" :active="actSL" to="/sucursales" :class="actSL ? 'text-white ' : ''">
-      <CIcon name="cilList"/> Lista de sucursales
-    </CNavItem>
-    <CNavItem :hidden="permisos(['sucursal.create'])" :active="actSC" to="/sucursales/registrar" :class="actSC ? 'text-white' : ''">
-      <b-icon icon="plus-circle"></b-icon> Registrar sucursal
-    </CNavItem>
-  </CNav>
+<CNav variant="pills">
+  <CNavItem v-if="permisos(['sucursal.create','sucursal.show','sucursal.edit', 'sucursal.destroy'])" :active="actSL" to="/sucursales" :class="actSL ? 'text-white ' : ''">
+    <CIcon name="cilList"/> Lista de sucursales
+  </CNavItem>
+  <CNavItem v-if="permisos(['sucursal.create'])" :active="actSC" to="/sucursales/registrar" :class="actSC ? 'text-white' : ''">
+    <b-icon icon="plus-circle"></b-icon> Registrar sucursal
+  </CNavItem>
+</CNav>
 </template>
 
 <script>
@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     permisos(permisos) {
-      return !check.permiso(permisos)
+      return check.permiso(permisos)
     }   
   },
 }

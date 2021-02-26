@@ -11,9 +11,11 @@ import Locales from './locale/vue-i18n-locales.generated.js';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 import PerfectScrollbar from 'vue2-perfect-scrollbar'
 import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
+import VuePageTransition from 'vue-page-transition'
 Vue.use(PerfectScrollbar)
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
+Vue.use(VuePageTransition)
 
 Vue.prototype.$apiAdress = 'http://127.0.0.1:8000'
 Vue.use(CoreuiVue)

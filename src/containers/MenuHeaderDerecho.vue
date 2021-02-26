@@ -1,6 +1,9 @@
 <template>
   <CHeaderNav>
     <CHeaderNavItem>
+      <CButton @click="recargar()" color="secondary" class="mr-2" title="Recargar"><CIcon name="cilSync" /></CButton>
+    </CHeaderNavItem>
+    <CHeaderNavItem>
       <CSelect :options="sucursales" :value="suc_activo" @update:value="selectSucursal" class="mt-3" />
     </CHeaderNavItem>
     <CHeaderNavItem class="px-3">
@@ -37,8 +40,11 @@ export default {
       suc_activo: JSON.parse(localStorage.getItem("usuario")).id_suc_act
     }
   },
-  methods:{
-    selectSucursal: function(option) {
+  methods: {
+    recargar() {
+      location.reload()
+    },
+    selectSucursal(option) {
       dash.dashboardUpdate('sucActiva', option)
     },
   }

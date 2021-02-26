@@ -28,7 +28,7 @@
 <script>
 import axios from 'axios'
 export default {
-  name: 'EditUser',
+  name: 'UsuEdit',
   props: {
     caption: {
       type: String,
