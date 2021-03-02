@@ -1,106 +1,165 @@
 <template>
-  <CRow>
-    <CCol col="12" lg="6">
-      <CCard no-header>
-        <CCardBody>
-          <h3>
-            Create Role
-          </h3>
-          <CAlert
-            :show.sync="dismissCountDown"
-            color="primary"
-            fade
-          >
-            ({{dismissCountDown}}) {{ message }}
-          </CAlert>
-
-          <CInput label="Name" type="text" placeholder="Name" v-model="role.name"></CInput>
-
-          <CButton color="primary" @click="store()">Create</CButton>
-          <CButton color="primary" @click="goBack">Back</CButton>
-        </CCardBody>
-      </CCard>
-    </CCol>
-  </CRow>
+<b-overlay :show="showForm" spinner-variant="primary" spinner-type="grow" spinner-small rounded="sm" opacity="0.27">
+  <CCard class="shadow">
+    <CCardHeader class="p-1">
+      <RolMenu :actRC="true" />
+    </CCardHeader>
+    <CForm @submit.prevent="store()" method="POST">
+      <CCardBody>
+        <CRow v-if="errors != null" class="alert alert-danger p-0 m-0">
+          <CCol sm="12"><ul><li class=" text-danger" v-for="error in errors">{{ error[0] }}</li></ul></CCol>
+        </CRow>
+        
+        
+         <CCol lg="6">
+          <CCard :class="`bg-${submitted ? 'info' : 'secondary' }`">
+            <pre>{{formString}}</pre>
+          </CCard>
+        </CCol>
+        <CRow>
+          <CCol sm="6">
+            <CInput label="Rol *" type="text" placeholder="Rol" maxlength="80" class="mb-0" :lazy="false" :value.sync="$v.form.nom.$model" :isValid="checkIfValid('nom')">
+              <template #prepend-content><CIcon name="cilText"/></template>
+            </CInput>
+            <span class="text-danger float-right" v-if="!$v.form.nom.required">Este es un campo obligatorio.</span>
+            <span class="text-danger float-right" v-if="!$v.form.nom.maxLength">Este campo no debe contener más de {{$v.form.nom.$params.maxLength.max }} caracteres.</span>
+          </CCol>
+          <CCol sm="6">
+            <CInput label="Slug *" type="text" placeholder="Slug" maxlength="40" class="mb-0" :lazy="false" :value.sync="$v.form.slug.$model" :isValid="checkIfValid('slug')">
+              <template #prepend-content><CIcon name="cilText"/></template>
+            </CInput>
+            <span class="text-danger float-right" v-if="!$v.form.slug.required">Este es un campo obligatorio.</span>
+            <span class="text-danger float-right" v-if="!$v.form.slug.maxLength">Este campo no debe contener más de {{$v.form.slug.$params.maxLength.max }} caracteres.</span>
+          </CCol>
+        </CRow>
+        <CRow>
+          <CCol sm="12">
+            <CFormGroup wrapperClasses="input-group pt-2">
+              <template #prepend-content><CIcon name="cilList"/></template>
+              <template #label>Permisos *</template>
+              <template #input>
+                <multiselect
+                  v-model="$v.form.perm.$model"
+                  :options="permisos"
+                  :group-select="true"
+                  tag-placeholder="Sin coincidencias"
+                  placeholder="Buscar . . ."
+                  select-label="Seleccionar"
+                  selected-label="Seleccionado"
+                  deselect-label="Quitar selección"
+                  label="text"
+                  :taggable="true"
+                  :multiple="true" 
+                  :close-on-select="false"
+                  class="form-control border-0 p-0 m-0"
+                />
+              </template>
+            </CFormGroup>
+            <span class="text-danger float-right" v-if="!$v.form.perm.required">Este es un campo obligatorio.</span>
+          </CCol>
+        </CRow>
+        <CRow>
+          <CCol sm="12">
+            <CTextarea label="Descripción" placeholder="Descripción"  maxlength="30000" vertical rows="9" class="mb-0" :lazy="false" :value.sync="$v.form.desc.$model" :isValid="checkIfValid('desc')">>
+              <template #prepend-content><CIcon name="cilText"/></template>
+            </CTextarea>
+            <span class="text-danger float-right" v-if="!$v.form.desc.maxLength">Este campo no debe contener más de {{$v.form.desc.$params.maxLength.max }} caracteres.</span>
+          </CCol>
+        </CRow>
+      </CCardBody>
+      <CCardFooter>
+        <CRow class="content-center">
+          <CCol>
+            <b-spinner label="Loading..." variant="primary" v-if="spinner"></b-spinner>
+            <CButton type="submit" color="primary" class="w-75" :disabled="!isValid || submitted" v-if="!submitted"><CIcon name="cilSave"/> Registrar</CButton>
+          </CCol>
+        </CRow>
+      </CCardFooter>
+    </CForm>
+  </CCard>
+</b-overlay>
 </template>
 
 <script>
-import axios from 'axios'
+import repoRol from './Repositories'
+import repoPer from '../permiso/Repositories'
+import RolMenu from './RolMenu'
+import alert from '@/repositories/global/alert'
+import Multiselect from 'vue-multiselect'
+import 'vue-multiselect/dist/vue-multiselect.min.css'
+import { validationMixin } from "vuelidate"
+import { required, maxLength } from "vuelidate/lib/validators"
+
 export default {
   name: 'RolCreate',
-  /*
-  props: {
-    caption: {
-      type: String,
-      default: 'User id'
-    },
+  components: {
+    RolMenu,
+    Multiselect
   },
-  */
-  data: () => {
+  data() {
     return {
-        role: {
-          name: '',
-        },
-        message: '',
-        dismissSecs: 7,
-        dismissCountDown: 0,
-        showDismissibleAlert: false
+      submitted: false,
+      spinner: false,
+      showForm: true,
+      form: this.getEmptyForm(),
+      errors: null,
+      permisos: [],
     }
   },
-  methods: {
-    goBack() {
-      this.$router.go(-1)
-      // this.$router.replace({path: '/users'})
-    },
-    store() {
-        let self = this;
-        axios.post(   this.$apiAdress + '/api/admin/rol?token=' + localStorage.getItem("api_token"),
-          {
-            name: self.role.name,
-          }
-        )
-        .then(function (response) {
-            self.note = {
-              title: '',
-              content: '',
-              applies_to_date: '',
-              status_id: null,
-              note_type: '',
-            };
-            self.message = 'Successfully created role.';
-            self.showAlert();
-        }).catch(function (error) {
-            if(error.response.data.message == 'The given data was invalid.'){
-              self.message = '';
-              for (let key in error.response.data.errors) {
-                if (error.response.data.errors.hasOwnProperty(key)) {
-                  self.message += error.response.data.errors[key][0] + '  ';
-                }
-              }
-              self.showAlert();
-            }else{
-              console.log(error);
-            //  self.$router.push({ path: 'login' }); 
-            }
-        });
-    },
-    countDownChanged (dismissCountDown) {
-      this.dismissCountDown = dismissCountDown
-    },
-    showAlert () {
-      this.dismissCountDown = this.dismissSecs
+  mounted: function() {
+    this.getPermisos();
+  },
+  computed: {
+    formString() { return JSON.stringify(this.form, null, 4) },
+    isValid() { return !this.$v.form.$invalid },
+  },
+  mixins: [validationMixin],
+  validations: {
+    form: {
+      nom: { required, maxLength: maxLength(80) },
+      slug: { required, maxLength: maxLength(40) },
+      perm: { required },
+      desc: { maxLength: maxLength(30000) },
     },
   },
-  mounted: function(){
-    let self = this;
-    axios.get(   this.$apiAdress + '/api/admin/rol/create?token=' + localStorage.getItem("api_token"))
-    .then(function (response) {
-        self.statuses = response.data;
-    }).catch(function (error) {
-        console.log(error);
-     //   self.$router.push({ path: 'login' });
-    });
+  methods: {
+    getEmptyForm() {
+      return {
+        nom: '',
+        slug: '',
+        perm: '',
+        desc: ''
+      }
+    },
+    clearForm() {
+      let self        = this;
+      self.form.nom   = ''
+      self.form.slug  = ''
+      self.form.perm  = ''
+      self.form.desc  = ''
+    },
+    checkIfValid(fieldName) {
+      const field = this.$v.form[fieldName]
+      if(!field.$dirty) {
+        return null
+      } 
+      return !(field.$invalid || field.$model === '')
+    },
+    async store() {
+      let self          = this;
+      let data          = await repoRol.storeRegistro(self)
+      if(data != undefined) {
+        self.clearForm()
+        self.submitted  = false
+        self.spinner    = false
+        await alert.response200(2, '¡Registrado exitosamente!', data.id)
+      }
+    },
+    async getPermisos() {
+      let self = this;
+      self.permisos = await repoPer.getAllPermisos(self)
+      self.showForm = false
+    },
   }
 }
-
 </script>

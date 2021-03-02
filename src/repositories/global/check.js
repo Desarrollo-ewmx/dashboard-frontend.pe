@@ -32,8 +32,8 @@ const getUserAutenticado = async (to, next) => {
       if(to.name == 'Login') {
         await next({ path: '/inicio' })
       }
-      let resp = await axios.post(store.state.apiAdress+'/api/admin/autenticado?token=' + localStorage.getItem("api_token"));
-      await dash.getDataStoreUser(resp.data, false)
+      let response = await axios.post(store.state.apiAdress+'/api/admin/autenticado?token=' + localStorage.getItem("api_token"));
+      await dash.getDataStoreUser(response.data, false)
 
       return true
     }

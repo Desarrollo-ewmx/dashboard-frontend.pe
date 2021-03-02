@@ -10,8 +10,8 @@
     <template #input>
       <multiselect
         @select="emitEvent"
+        v-model="serie"
         :options="series"
-        :value="val_ser_cot"
         :group-select="true"
         tag-placeholder="Sin coincidencias"
         placeholder="Buscar . . ."
@@ -48,7 +48,8 @@ export default {
   data() {
     return {
       series: [],
-      val_input: {value: 'Cotizaciones (Serie)', text: 'Cotizaciones (Serie)'}
+      val_input: {value: 'Cotizaciones (Serie)', text: 'Cotizaciones (Serie)'},
+      serie: this.val_ser_cot
     }
   },
   mounted: function() {

@@ -62,8 +62,6 @@ import repoSuc from './Repositories'
 import SucMenu from './SucMenu'
 import CatModalCreate from '../catalogo/CatModalCreate'
 import alert from '@/repositories/global/alert'
-import Multiselect from 'vue-multiselect'
-import 'vue-multiselect/dist/vue-multiselect.min.css'
 import { validationMixin } from "vuelidate"
 import { required, maxLength } from "vuelidate/lib/validators"
 import check from '@/repositories/global/check'
@@ -76,7 +74,6 @@ export default {
   components: {
     SucMenu,
     CatModalCreate,
-    Multiselect,
     GloModalCreateOneImagen,
     ActModalTable
   },
@@ -117,7 +114,7 @@ export default {
     },
     checkIfValid(fieldName) {
       const field = this.$v.form[fieldName]
-      if (!field.$dirty) {
+      if(!field.$dirty) {
         return null
       } 
       return !(field.$invalid || field.$model === '')
@@ -134,10 +131,8 @@ export default {
 
       if(result.value) {
         let self          = this;
-        self.form.val_ant = self.form.ser_cot
         let data          = await repoSuc.updateRegistro(self)
         if(data != undefined) {
-          self.form.ser_cot = self.form.val_ant;
           self.submitted    = false
           self.spinner      = false
           await alert.response200(3, '¡Actualizado exitosamente!', '')

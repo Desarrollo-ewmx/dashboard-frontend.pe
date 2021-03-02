@@ -1,5 +1,6 @@
 <template>
 <b-overlay :show="showForm" spinner-variant="primary" spinner-type="grow" spinner-small rounded="sm" opacity="0.27">
+
   <CCard class="shadow">
     <CCardHeader class="p-1">
       <SucMenu :actSC="true" />
@@ -50,8 +51,6 @@ import repoSuc from './Repositories'
 import SucMenu from './SucMenu'
 import CatModalCreate from '../catalogo/CatModalCreate'
 import alert from '@/repositories/global/alert'
-import Multiselect from 'vue-multiselect'
-import 'vue-multiselect/dist/vue-multiselect.min.css'
 import { validationMixin } from "vuelidate"
 import { required, maxLength } from "vuelidate/lib/validators"
 
@@ -59,8 +58,7 @@ export default {
   name: 'SucCreate',
   components: {
     SucMenu,
-    CatModalCreate,
-    Multiselect
+    CatModalCreate
   },
   data() {
     return {
@@ -99,14 +97,13 @@ export default {
     },
     checkIfValid(fieldName) {
       const field = this.$v.form[fieldName]
-      if (!field.$dirty) {
+      if(!field.$dirty) {
         return null
       } 
       return !(field.$invalid || field.$model === '')
     },
     async store() {
       let self          = this;
-      self.form.val_ant = self.form.ser_cot
       let data          = await repoSuc.storeRegistro(self)
       if(data != undefined) {
         self.clearForm()

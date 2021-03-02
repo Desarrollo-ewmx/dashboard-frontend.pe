@@ -10,8 +10,8 @@
           <CDataTable :items="items" :column-filter-value.sync="columnFilter" :table-filter-value.sync="tableFilter" :loading="loading" :itemsPerPage="itemsLimit" index-column hover footer fixed striped responsive outlined table-column
             :fields="[ 
                       { key: 'id', label: 'ID' },
-                      { key: 'suc', label: 'SUCURSAL' },
-                      { key: 'ser_cot', label: 'SERIE' },
+                      { key: 'nom', label: 'ROL' },
+                      { key: 'desc', label: 'DESCRIPCIÓN' },
                       { key: 'created_at', label: 'FECHA DE REGISTRO' },
                       { key: 'editar', label: '' },
                       { key: 'eliminar', label: '' },
@@ -27,10 +27,10 @@
             @pagination-change="changeItemsLimit"
             :sorter-value.sync="sorter"
             >
-            <template #suc="{item}">
+            <template #nom="{item}">
               <td>
-                <CLink :to="{ name: 'Detalles Sucursal', params: { id: item.id }}" v-if="permisos(['sucursal.show', 'sucursal.edit'])" v-text="item.suc" />
-                <span v-else v-text="item.suc" />
+                <CLink :to="{ name: 'Detalles Rol', params: { id: item.id }}" v-if="permisos(['rol.show', 'rol.edit'])" v-text="item.nom" />
+                <span v-else v-text="item.nom" />
               </td>
             </template>
             <template #created_at-filter="{item}">
@@ -38,10 +38,10 @@
               <span class="pantallaMax985px">Hasta: </span><input type="date" :value="endDate" @change="e => setDateFilter(e, 'end')" />
             </template>
             <template #editar="{item}">
-              <td><CLink :to="{ name: 'Editar Sucursal', params: { id: item.id }}" v-if="permisos(['sucursal.edit'])" class="btn btn-secondary"><CIcon name="cilPencil"/></CLink></td>
+              <td><CLink :to="{ name: 'Editar Rol', params: { id: item.id }}" v-if="permisos(['rol.edit'])" class="btn btn-secondary"><CIcon name="cilPencil"/></CLink></td>
             </template>
             <template #eliminar="{item}">
-              <td><CLink v-if="permisos(['sucursal.destroy'])" @click="deleteRegistro(item.id)" class="btn btn-danger"><CIcon name="cilTrash"/></CLink></td>
+              <td><CLink v-if="permisos(['rol.destroy'])" @click="deleteRegistro(item.id)" class="btn btn-danger"><CIcon name="cilTrash"/></CLink></td>
             </template>
           </CDataTable>
         </perfect-scrollbar>
@@ -62,7 +62,7 @@ import alert from '@/repositories/global/alert'
 import Swal from 'sweetalert2'
 
 export default {
-  name: 'SucIndex',
+  name: 'RolIndex',
   components: {
     RolMenu
   },
@@ -82,13 +82,13 @@ export default {
     }
   },
   mounted: function() {
-    this.getSucursales();
+    this.getRoles();
   },
   methods: {
     permisos(permisos) {
       return check.permiso(permisos)
     },
-    async getSucursales() {
+    async getRoles() {
       let self      = this;
       self.loading  = true
       self.items    = [];
@@ -115,13 +115,13 @@ export default {
         let data = await repoRol.deleteRegistro(self, id)
         if(data != undefined) {
           await alert.response200(3, '¡Registro eliminado exitosamente!','')
-          await self.getSucursales();
+          await self.getRoles();
         }
       }
     },
     changeItemsLimit(val) {
       this.itemsLimit = val;
-      this.getSucursales();
+      this.getRoles();
     },
     setDateFilter(e, end) {
       if(end) {
@@ -129,24 +129,24 @@ export default {
       } else {
         this.startDate = e.target.value
       }
-      this.getSucursales();
+      this.getRoles();
     }
   },
   watch: {
     activePage() {
-      this.getSucursales();
+      this.getRoles();
     },
   	sorter: {
     	handler() {
-      	this.getSucursales();
+      	this.getRoles();
       },
       deep: true
     },
     tableFilter() {
-      this.getSucursales();
+      this.getRoles();
     },
     columnFilter() {
-      this.getSucursales();
+      this.getRoles();
     },
   },
 }

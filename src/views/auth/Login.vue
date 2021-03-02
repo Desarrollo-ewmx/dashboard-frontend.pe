@@ -104,7 +104,7 @@ export default {
     },
     checkIfValid (fieldName) {
       const field = this.$v.form[fieldName]
-      if (!field.$dirty) {
+      if(!field.$dirty) {
         return null
       } 
       return !(field.$invalid || field.$model === '')
