@@ -10,57 +10,59 @@
       </h4>
     </CCardHeader>
     <CCardBody>
-      <CRow>
-        <CCol sm="3">
-          <b-card v-if="form.log_nom != null" :img-src="form.log_rut+form.log_nom" style="max-width:20rem;" class="p-0 m-0" img-alt="Image" img-top no-body />
-          <b-card v-else :img-src="sistema.def_img_rut+sistema.def_img_nom" style="max-width:20rem;" class="p-0 m-0" img-alt="Image" img-top no-body />
-        </CCol>
-        <CCol sm="9">
-          <CRow>
-            <CCol sm="6">
-              <CInput label="Fecha de registro" type="text" placeholder="Fecha de registro" v-model="form.created_at" :disabled="true">
-                <template #prepend-content><CIcon name="cilCalendar"/></template>
-              </CInput>
-            </CCol>
-            <CCol sm="6">
-              <CInput label="Registrado por" type="text" placeholder="Registrado por" v-model="form.created_at_reg" :disabled="true">
-                <template #prepend-content><CIcon name="cil-envelope-open"/></template>
-              </CInput>
-            </CCol>
-          </CRow>
-          <CRow>
-            <CCol sm="6">
-              <CInput label="Fecha última modificación" type="text" placeholder="Fecha última modificación" v-model="form.updated_at" :disabled="true">
-                <template #prepend-content><CIcon name="cilCalendar"/></template>
-              </CInput>
-            </CCol>
-            <CCol sm="6">
-              <CInput label="Última modificación por" type="text" placeholder="Última modificación por" v-model="form.updated_at_reg" :disabled="true">
-                <template #prepend-content><CIcon name="cil-envelope-open"/></template>
-              </CInput>
-            </CCol>
-          </CRow>
-          <CRow>
-            <CCol sm="6">
-              <CInput label="Sucursal" type="text" placeholder="Sucursal" v-model="form.suc" :disabled="true">
-                <template #prepend-content><CIcon name="cilText"/></template>
-              </CInput>
-            </CCol>
-            <CCol sm="6">
-              <CInput label="Serie" type="text" placeholder="Serie" v-model="form.ser_cot" :disabled="true">
-                <template #prepend-content><CIcon name="cilText"/></template>
-              </CInput>
-            </CCol>
-          </CRow>
-          <CRow>
-            <CCol sm="12">
-              <CInput label="Dirección" type="text" placeholder="Dirección" v-model="form.direc" :disabled="true">
-                <template #prepend-content><CIcon name="cilText"/></template>
-              </CInput>
-            </CCol>
-          </CRow>
-        </CCol>
-      </CRow>
+      <fieldset disabled>
+        <CRow>
+          <CCol sm="3">
+            <b-card v-if="form.log_nom != null" :img-src="form.log_rut+form.log_nom" style="max-width:20rem;" class="p-0 m-0" img-alt="Image" img-top no-body />
+            <b-card v-else :img-src="sistema.def_img_rut+sistema.def_img_nom" style="max-width:20rem;" class="p-0 m-0" img-alt="Image" img-top no-body />
+          </CCol>
+          <CCol sm="9">
+            <CRow>
+              <CCol sm="6">
+                <CInput label="Fecha de registro" type="text" placeholder="Fecha de registro" v-model="form.created_at">
+                  <template #prepend-content><CIcon name="cilCalendar"/></template>
+                </CInput>
+              </CCol>
+              <CCol sm="6">
+                <CInput label="Registrado por" type="text" placeholder="Registrado por" v-model="form.created_at_reg">
+                  <template #prepend-content><CIcon name="cil-envelope-open"/></template>
+                </CInput>
+              </CCol>
+            </CRow>
+            <CRow>
+              <CCol sm="6">
+                <CInput label="Fecha última modificación" type="text" placeholder="Fecha última modificación" v-model="form.updated_at">
+                  <template #prepend-content><CIcon name="cilCalendar"/></template>
+                </CInput>
+              </CCol>
+              <CCol sm="6">
+                <CInput label="Última modificación por" type="text" placeholder="Última modificación por" v-model="form.updated_at_reg">
+                  <template #prepend-content><CIcon name="cil-envelope-open"/></template>
+                </CInput>
+              </CCol>
+            </CRow>
+            <CRow>
+              <CCol sm="6">
+                <CInput label="Sucursal" type="text" placeholder="Sucursal" v-model="form.suc">
+                  <template #prepend-content><CIcon name="cilText"/></template>
+                </CInput>
+              </CCol>
+              <CCol sm="6">
+                <CInput label="Serie" type="text" placeholder="Serie" v-model="form.ser_cot">
+                  <template #prepend-content><CIcon name="cilText"/></template>
+                </CInput>
+              </CCol>
+            </CRow>
+            <CRow>
+              <CCol sm="12">
+                <CInput label="Dirección" type="text" placeholder="Dirección" v-model="form.direc">
+                  <template #prepend-content><CIcon name="cilText"/></template>
+                </CInput>
+              </CCol>
+            </CRow>
+          </CCol>
+        </CRow>
+      </fieldset>
     </CCardBody>
     <CCardFooter>
       <CRow class="content-center">
@@ -99,10 +101,10 @@ export default {
       return check.permiso(permisos)
     },
     async getRegistro() {
-      let self = this;
-      self.form = await repoSuc.getRegistro(self);
+      let self      = this;
+      self.form     = await repoSuc.getRegistro(self);
       self.showForm = false
     }
-  },
+  }
 }
 </script>

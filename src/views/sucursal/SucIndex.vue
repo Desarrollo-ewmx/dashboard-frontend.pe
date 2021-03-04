@@ -93,6 +93,8 @@ export default {
       self.loading  = true
       self.items    = [];
       let data      = await repoSuc.getPagination(self)
+      if(isNaN(parseFloat(data.from))) { data.from = 0; }
+      if(isNaN(parseFloat(data.to))) { data.to = 0; }
       self.texto    = `Mostrando desde ${data.from} hasta ${data.to} de ${data.total} registros.`
       self.items    = self.items.concat(data.data)
       self.maxPages = data.last_page

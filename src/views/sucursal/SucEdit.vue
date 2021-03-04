@@ -43,6 +43,13 @@
             </CRow>
           </CCol>
         </CRow>
+        <!--
+        <CCol lg="6">
+          <CCard :class="`bg-${submitted ? 'info' : 'secondary' }`">
+            <pre>{{formString}}</pre>
+          </CCard>
+        </CCol>
+        -->
       </CCardBody>
       <CCardFooter>
         <CRow class="content-center">
@@ -59,7 +66,6 @@
 
 <script>
 import repoSuc from './Repositories'
-import SucMenu from './SucMenu'
 import CatModalCreate from '../catalogo/CatModalCreate'
 import alert from '@/repositories/global/alert'
 import { validationMixin } from "vuelidate"
@@ -72,7 +78,6 @@ import Swal from 'sweetalert2'
 export default {
   name: 'SucEdit',
   components: {
-    SucMenu,
     CatModalCreate,
     GloModalCreateOneImagen,
     ActModalTable
@@ -130,11 +135,11 @@ export default {
       })
 
       if(result.value) {
-        let self          = this;
-        let data          = await repoSuc.updateRegistro(self)
+        let self  = this;
+        let data  = await repoSuc.updateRegistro(self)
         if(data != undefined) {
-          self.submitted    = false
-          self.spinner      = false
+          self.submitted  = false
+          self.spinner    = false
           await alert.response200(3, '¡Actualizado exitosamente!', '')
         }
       }

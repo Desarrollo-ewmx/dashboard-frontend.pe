@@ -1,7 +1,7 @@
 <template>
 <CCard class="shadow">
   <CCardHeader class="p-1">
-    <RolMenu :actRL="true" />
+    <RolMenu :actPL="true" />
   </CCardHeader>
   <CCardBody>
     <CRow>
@@ -10,11 +10,11 @@
           <CDataTable :items="items" :column-filter-value.sync="columnFilter" :table-filter-value.sync="tableFilter" :loading="loading" :itemsPerPage="itemsLimit" index-column hover footer fixed striped responsive outlined table-column
             :fields="[ 
                       { key: 'id', label: 'ID' },
-                      { key: 'nom', label: 'ROL' },
+                      { key: 'mod', label: 'MÓDULO' },
+                      { key: 'nom', label: 'PERMISO' },
                       { key: 'desc', label: 'DESCRIPCIÓN' },
                       { key: 'created_at', label: 'FECHA DE REGISTRO' },
                       { key: 'editar', label: '' },
-                      { key: 'eliminar', label: '' },
                     ]"
             :noItemsView="{ 
                     noResults: 'No hay resultados de filtrado disponibles', 
@@ -27,9 +27,17 @@
             @pagination-change="changeItemsLimit"
             :sorter-value.sync="sorter"
             >
+
+
+
+
+
+
+
+
             <template #nom="{item}">
               <td>
-                <CLink :to="{ name: 'Detalles Rol', params: { id: item.id }}" v-if="permisos(['rol.show', 'rol.edit'])" v-text="item.nom" />
+                <CLink :to="{ name: 'Detalles Rol', params: { id: item.id }}" v-if="permisos(['sucursal.show', 'sucursal.edit'])" v-text="item.nom" />
                 <span v-else v-text="item.nom" />
               </td>
             </template>
@@ -38,11 +46,17 @@
               <span class="pantallaMax985px">Hasta: </span><input type="date" :value="endDate" @change="e => setDateFilter(e, 'end')" />
             </template>
             <template #editar="{item}">
-              <td><CLink :to="{ name: 'Editar Rol', params: { id: item.id }}" v-if="permisos(['rol.edit'])" class="btn btn-secondary"><CIcon name="cilPencil"/></CLink></td>
+              <td><CLink :to="{ name: 'Editar Permiso', params: { id: item.id }}" v-if="permisos(['sucursal.edit'])" class="btn btn-secondary"><CIcon name="cilPencil"/></CLink></td>
             </template>
-            <template #eliminar="{item}">
-              <td><CLink v-if="permisos(['rol.destroy'])" @click="deleteRegistro(item.id)" class="btn btn-danger"><CIcon name="cilTrash"/></CLink></td>
-            </template>
+           
+
+
+
+
+
+
+
+
           </CDataTable>
         </perfect-scrollbar>
       </CCol>
@@ -54,15 +68,13 @@
 </template>
 
 <script>
-import repoRol from './Repositories'
+import repoPer from './Repositories'
 import repoGlo from '@/repositories/global/global'
-import RolMenu from './RolMenu'
+import RolMenu from '../rol/RolMenu'
 import check from '@/repositories/global/check'
-import alert from '@/repositories/global/alert'
-import Swal from 'sweetalert2'
 
 export default {
-  name: 'RolIndex',
+  name: 'PerIndex',
   components: {
     RolMenu
   },
@@ -82,17 +94,17 @@ export default {
     }
   },
   mounted: function() {
-    this.getRoles();
+    this.getPermisos();
   },
   methods: {
     permisos(permisos) {
       return check.permiso(permisos)
     },
-    async getRoles() {
+    async getPermisos() {
       let self      = this;
       self.loading  = true
       self.items    = [];
-      let data      = await repoRol.getPagination(self)
+      let data      = await repoPer.getPagination(self)
       if(isNaN(parseFloat(data.from))) { data.from = 0; }
       if(isNaN(parseFloat(data.to))) { data.to = 0; }
       self.texto    = `Mostrando desde ${data.from} hasta ${data.to} de ${data.total} registros.`
@@ -100,30 +112,9 @@ export default {
       self.maxPages = data.last_page
       self.loading  = false
     },
-    async deleteRegistro(id) {
-      let result = await Swal.fire({
-        icon: 'info',
-        title: '¿Estás seguro que quieres eliminar este registro?',
-        html: 'Enviaras toda la información relacionada a este registro a la papelera de reciclaje.',
-        reverseButtons: true,
-        showCancelButton: true,
-        confirmButtonText: 'Eliminar',
-        confirmButtonColor: '#CB3234',
-        cancelButtonText: `Cancelar`,
-      })
-
-      if(result.value) {
-        let self = this;
-        let data = await repoRol.deleteRegistro(self, id)
-        if(data != undefined) {
-          await alert.response200(3, '¡Registro eliminado exitosamente!','')
-          await self.getRoles();
-        }
-      }
-    },
     changeItemsLimit(val) {
       this.itemsLimit = val;
-      this.getRoles();
+      this.getPermisos();
     },
     setDateFilter(e, end) {
       if(end) {
@@ -131,24 +122,24 @@ export default {
       } else {
         this.startDate = e.target.value
       }
-      this.getRoles();
+      this.getPermisos();
     }
   },
   watch: {
     activePage() {
-      this.getRoles();
+      this.getPermisos();
     },
   	sorter: {
     	handler() {
-      	this.getRoles();
+      	this.getPermisos();
       },
       deep: true
     },
     tableFilter() {
-      this.getRoles();
+      this.getPermisos();
     },
     columnFilter() {
-      this.getRoles();
+      this.getPermisos();
     },
   },
 }

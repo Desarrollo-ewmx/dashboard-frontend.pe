@@ -25,13 +25,6 @@ const storeRegistro = async (self) => {
   self.spinner    = true
   self.errors     = null
 
-  self.form.permis = []
-  self.form.perm.forEach(function(valor, indice, array) {
-    self.form.permis.push(
-      valor.value
-    );
-  });
-
 	try {
     let response = await axios.post(self.$apiAdress+urlAPI+'/almacenar?token='+localStorage.getItem("api_token"), self.form);
 
@@ -61,6 +54,13 @@ const getRegistro = async (self) => {
 	try {
     let response = await axios.post(self.$apiAdress+urlAPI+'/get/'+self.$route.params.id+'?token='+localStorage.getItem("api_token"));
     
+    response.data.permis = []
+    response.data.permissions.forEach(function(valor, indice, array) {
+      response.data.permis.push(
+        valor.id
+      );
+    });
+
 		return response.data
 	}catch(error) {
 		alert.responseCatch(error, 'Code #1018')

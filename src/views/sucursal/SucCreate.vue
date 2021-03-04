@@ -32,6 +32,13 @@
             <span class="text-danger float-right" v-if="!$v.form.direc.maxLength">Este campo no debe contener más de {{$v.form.direc.$params.maxLength.max }} caracteres.</span>
           </CCol>
         </CRow>
+        <!--
+        <CCol lg="6">
+          <CCard :class="`bg-${submitted ? 'info' : 'secondary' }`">
+            <pre>{{formString}}</pre>
+          </CCard>
+        </CCol>
+        -->
       </CCardBody>
       <CCardFooter>
         <CRow class="content-center">
@@ -106,10 +113,12 @@ export default {
       let self          = this;
       let data          = await repoSuc.storeRegistro(self)
       if(data != undefined) {
+        self.showForm     = true
         self.clearForm()
         self.submitted  = false
         self.spinner    = false
         await alert.response200(2, '¡Registrado exitosamente!', data.id)
+        self.showForm     = false
       }
     },
     respCatModalCreate(dataEvent) {

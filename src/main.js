@@ -9,9 +9,12 @@ import vuexI18n from 'vuex-i18n';
 import Locales from './locale/vue-i18n-locales.generated.js';
 
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
+//import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
 import PerfectScrollbar from 'vue2-perfect-scrollbar'
 import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
 import VuePageTransition from 'vue-page-transition'
+//import VueCryptojs from 'vue-cryptojs'
+//Vue.use(VueCryptojs)
 Vue.use(PerfectScrollbar)
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)

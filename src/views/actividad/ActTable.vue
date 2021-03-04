@@ -6,7 +6,7 @@
         <CDataTable :items="items" :column-filter-value.sync="columnFilter" :table-filter-value.sync="tableFilter" :loading="loading" :itemsPerPage="itemsLimit" index-column hover footer fixed striped responsive outlined table-column
           :fields="[ 
                     { key: 'id', label: 'ID' },
-                    { key: 'email_registro', label: 'CORREO DE USUARIO' },
+                    { key: 'email_registro', label: 'USUARIO' },
                     { key: 'mod', label: 'MÓDULO' },
                     { key: 'actividad_id', label: 'REGISTRO' },
                     { key: 'inpu', label: 'INPUT' },
@@ -27,8 +27,8 @@
           >
           <template #email_registro="{item}">
             <td>
-              <CLink :to="{ name: 'Detalles Usuario', params: { id: item.user_id }}" v-if="permisos(['usuario.show'])" target="_blank" v-text="item.email_registro" />
-              <span v-else>{{ item.email_registro }}</span>
+              <CLink :to="{ name: 'Detalles Usuario', params: { id: item.user_id }}" v-if="permisos(['usuario.show'])" target="_blank">{{ item.name }} ({{ item.email_registro }})</CLink>
+              <span v-else>{{ item.name }} ({{ item.email_registro }})</span>
             </td>
           </template>
           <template #actividad_id="{item}">
@@ -97,10 +97,10 @@ export default {
       }).then(function (response) {
         if(isNaN(parseFloat(response.data.from))) { response.data.from = 0; }
         if(isNaN(parseFloat(response.data.to))) { response.data.to = 0; }
-        self.texto = `Mostrando desde ${response.data.from} hasta ${response.data.to} de ${response.data.total} registros.`
-        self.items = self.items.concat(response.data.data)
+        self.texto    = `Mostrando desde ${response.data.from} hasta ${response.data.to} de ${response.data.total} registros.`
+        self.items    = self.items.concat(response.data.data)
         self.maxPages = response.data.last_page
-        self.loading = false
+        self.loading  = false
       }).catch(function (error) {
         self.loading = false
         alert.responseCatch(error, 'Code #1002') 
@@ -138,3 +138,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.card-body >>> table > tbody > tr > td {
+  cursor: pointer;
+}
+</style>

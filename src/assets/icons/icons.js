@@ -1,4 +1,7 @@
 import {
+  cilFolder,
+  cilWindowRestore,
+  cibArchiveOfOurOwn,
   cilSync,
   cilBook,
   cilBuilding,
@@ -141,6 +144,9 @@ import { logo } from './logo'
 
 
 export const iconsSet = Object.assign({}, { logo }, {
+  cilFolder,
+  cilWindowRestore,
+  cibArchiveOfOurOwn,
   cilSync,
   cilBook,
   cilBuilding,

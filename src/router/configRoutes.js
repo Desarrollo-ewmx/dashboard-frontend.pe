@@ -3,8 +3,11 @@ import InicioRoutes from './inicio/InicioRoutes';
 import PerfilRoutes from './perfil/PerfilRoutes';
 import SucursalRoutes from './sucursal/SucursalRoutes';
 import CatalogoRoutes from './catalogo/CatalogoRoutes';
+import ActividadRoutes from './actividad/ActividadRoutes';
 import UsuarioRoutes from './usuario/UsuarioRoutes';
 import RolRoutes from './rol/RolRoutes';
+import PermisoRoutes from './permiso/PermisoRoutes';
+import papeleraDeReciclajeRoutes from './papeleraDeReciclaje/papeleraDeReciclajeRoutes';
 
 const configRoutes = () => {
   return [
@@ -29,12 +32,24 @@ const configRoutes = () => {
       children : [...CatalogoRoutes.children]
     },
     {
+      ...ActividadRoutes,
+      children : [...ActividadRoutes.children]
+    },
+    {
       ...UsuarioRoutes,
       children : [...UsuarioRoutes.children]
     },
     {
       ...RolRoutes,
       children : [...RolRoutes.children]
+    },
+    {
+      ...PermisoRoutes,
+      children : [...PermisoRoutes.children]
+    },
+    {
+      ...papeleraDeReciclajeRoutes,
+      children : [...papeleraDeReciclajeRoutes.children]
     }
   ]
 }
