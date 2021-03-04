@@ -1,7 +1,7 @@
 <template>
 <CCard class="shadow">
   <CCardHeader class="p-1">
-    <RolMenu :actPL="true" />
+    <QysMenu :actQL="true" />
   </CCardHeader>
   <CCardBody>
     <CRow>
@@ -10,11 +10,11 @@
           <CDataTable :items="items" :column-filter-value.sync="columnFilter" :table-filter-value.sync="tableFilter" :loading="loading" :itemsPerPage="itemsLimit" index-column hover footer fixed striped responsive outlined table-column
             :fields="[ 
                       { key: 'id', label: 'ID' },
-                      { key: 'mod', label: 'MÓDULO' },
-                      { key: 'nom', label: 'PERMISO' },
-                      { key: 'desc', label: 'DESCRIPCIÓN' },
+                      { key: 'email_registro', label: 'USUARIO' },
+                      { key: 'tip', label: 'TIPO' },
+                      { key: 'depto', label: 'DEPARTAMENTO' },
+                      { key: 'obs', label: 'OBSERVACIONES' },
                       { key: 'created_at', label: 'FECHA DE REGISTRO' },
-                      { key: 'editar', label: '' },
                     ]"
             :noItemsView="{ 
                     noResults: 'No hay resultados de filtrado disponibles', 
@@ -31,14 +31,17 @@
               <span class="pantallaMax985px">Desde: </span><input type="date" :value="startDate" @change="setDateFilter" class="mr-2" />
               <span class="pantallaMax985px">Hasta: </span><input type="date" :value="endDate" @change="e => setDateFilter(e, 'end')" />
             </template>
-            <template #nom="{item}">
-              <td>
-                <CLink :to="{ name: 'Detalles Permiso', params: { id: item.id }}" v-if="permisos(['rol.show','rol.edit'])" v-text="item.nom" />
-                <span v-else v-text="item.nom" />
+            <template #id="{item}">
+              <td title="Detalles">
+                <CLink :to="{ name: 'Detalles Queja y Sugerencia', params: { id: item.id }}" v-if="permisos(['quejaYSugerencia.show', 'quejaYSugerencia.edit'])" v-text="item.id" />
+                <span v-else v-text="item.id" />
               </td>
             </template>
-            <template #editar="{item}">
-              <td><CLink :to="{ name: 'Editar Permiso', params: { id: item.id }}" v-if="permisos(['rol.edit'])" class="btn btn-secondary"><CIcon name="cilPencil"/></CLink></td>
+            <template #email_registro="{item}">
+              <td>
+                <CLink :to="{ name: 'Detalles Usuario', params: { id: item.user_id }}" v-if="permisos(['usuario.show', 'usuario.edit'])" target="_blank">{{ item.name }} ({{ item.email_registro }})</CLink>
+                <span v-else>{{ item.name }} ({{ item.email_registro }})</span>
+              </td>
             </template>
           </CDataTable>
         </perfect-scrollbar>
@@ -51,15 +54,15 @@
 </template>
 
 <script>
-import repoPer from './Repositories'
+import repoQys from './Repositories'
 import repoGlo from '@/repositories/global/global'
-import RolMenu from '../rol/RolMenu'
+import QysMenu from './QysMenu'
 import check from '@/repositories/global/check'
 
 export default {
-  name: 'PerIndex',
+  name: 'QysIndex',
   components: {
-    RolMenu
+    QysMenu
   },
   data () {
     return {
@@ -77,17 +80,17 @@ export default {
     }
   },
   mounted: function() {
-    this.getPermisos();
+    this.getQuejasYSugerencias();
   },
   methods: {
     permisos(permisos) {
       return check.permiso(permisos)
     },
-    async getPermisos() {
+    async getQuejasYSugerencias() {
       let self      = this;
       self.loading  = true
       self.items    = [];
-      let data      = await repoPer.getPagination(self)
+      let data      = await repoQys.getPagination(self)
       if(isNaN(parseFloat(data.from))) { data.from = 0; }
       if(isNaN(parseFloat(data.to))) { data.to = 0; }
       self.texto    = `Mostrando desde ${data.from} hasta ${data.to} de ${data.total} registros.`
@@ -97,7 +100,7 @@ export default {
     },
     changeItemsLimit(val) {
       this.itemsLimit = val;
-      this.getPermisos();
+      this.getQuejasYSugerencias();
     },
     setDateFilter(e, end) {
       if(end) {
@@ -105,24 +108,24 @@ export default {
       } else {
         this.startDate = e.target.value
       }
-      this.getPermisos();
+      this.getQuejasYSugerencias();
     }
   },
   watch: {
     activePage() {
-      this.getPermisos();
+      this.getQuejasYSugerencias();
     },
   	sorter: {
     	handler() {
-      	this.getPermisos();
+      	this.getQuejasYSugerencias();
       },
       deep: true
     },
     tableFilter() {
-      this.getPermisos();
+      this.getQuejasYSugerencias();
     },
     columnFilter() {
-      this.getPermisos();
+      this.getQuejasYSugerencias();
     },
   },
 }

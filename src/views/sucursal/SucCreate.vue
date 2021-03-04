@@ -1,6 +1,5 @@
 <template>
 <b-overlay :show="showForm" spinner-variant="primary" spinner-type="grow" spinner-small rounded="sm" opacity="0.27">
-
   <CCard class="shadow">
     <CCardHeader class="p-1">
       <SucMenu :actSC="true" />
@@ -110,10 +109,10 @@ export default {
       return !(field.$invalid || field.$model === '')
     },
     async store() {
-      let self          = this;
-      let data          = await repoSuc.storeRegistro(self)
+      let self  = this;
+      let data  = await repoSuc.storeRegistro(self)
       if(data != undefined) {
-        self.showForm     = true
+        self.showForm   = true
         self.clearForm()
         self.submitted  = false
         self.spinner    = false

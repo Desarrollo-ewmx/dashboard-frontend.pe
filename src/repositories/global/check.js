@@ -7,7 +7,7 @@ import dash from '@/repositories/global/dashboard'
 const permiso = (permiso) => {
   // Permiso global es para las rutas que no se necesita un permiso en especifico para acceder por ejemplo el tablero y todas las ventanas del perfil del usuario donde cualquiera puede acceder siempre y cuando este logeado
   if(permiso[0] == 'global')
-  return true
+    return true
     
   // Verifica si el usuario tiene el rol de desarrollador y permite el acceso a la ruta
   let roles = JSON.parse(localStorage.getItem("roless"))

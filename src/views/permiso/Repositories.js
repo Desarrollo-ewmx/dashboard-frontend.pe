@@ -20,6 +20,30 @@ const getPagination = async (self) => {
 		alert.responseCatch(error, 'Code #1015')
 	}
 }
+const updateRegistro = async (self) => {
+  self.submitted  = true
+  self.spinner    = true
+  self.errors     = null
+
+	try {
+    let response = await axios.post(self.$apiAdress+urlAPI+'/actualizar/'+self.$route.params.id+'?token='+localStorage.getItem("api_token"), self.form);
+     
+    return response.data
+	}catch(error) {
+    self.submitted  = false
+    self.spinner    = false
+    self.errors     = alert.responseCatch(error, 'Code #1017');
+	}
+}
+const getRegistro = async (self) => {
+	try {
+    let response = await axios.post(self.$apiAdress+urlAPI+'/get/'+self.$route.params.id+'?token='+localStorage.getItem("api_token"));
+    
+		return response.data
+	}catch(error) {
+		alert.responseCatch(error, 'Code #1018')
+	}
+}
 const getAllPermisos = async (self) => {
 	try {
     let response = await axios.post(self.$apiAdress+urlAPI+'/getAll?token='+localStorage.getItem("api_token"));
@@ -70,5 +94,7 @@ const getAllPermisos = async (self) => {
 
 export default ({
   getPagination,
+  updateRegistro,
+  getRegistro,
   getAllPermisos,
 });

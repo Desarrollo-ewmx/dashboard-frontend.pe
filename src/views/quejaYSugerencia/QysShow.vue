@@ -4,9 +4,7 @@
     <CCardHeader color="info p-1">
       <ActModalTable :id_modelo="$route.params.id" />
       <h4>
-        Detalles del registro:
-        <CLink :to="{ name: 'Editar Permiso', params: { id: $route.params.id }}" v-if="permisos(['rol.edit'])" v-text="$route.params.id" />
-        <span v-else v-text="$route.params.id" />
+        Detalles del registro:<span v-text="$route.params.id" />
       </h4>
     </CCardHeader>
     <CCardBody>
@@ -29,31 +27,14 @@
               <template #prepend-content><CIcon name="cilCalendar"/></template>
             </CInput>
           </CCol>
-          <CCol sm="6">
-            <CInput label="Última modificación por" type="text" placeholder="Última modificación por" v-model="form.updated_at_reg">
-              <template #prepend-content><CIcon name="cil-envelope-open"/></template>
-            </CInput>
-          </CCol>
-        </CRow>
-        <CRow>
-          <CCol sm="6">
-            <CInput label="Módulo" type="text" placeholder="Módulo"  v-model="form.mod">
-              <template #prepend-content><CIcon name="cilText"/></template>
-            </CInput>
-          </CCol>
-          <CCol sm="6">
-            <CInput label="Permiso" type="text" placeholder="Permiso" v-model="form.nom">
-              <template #prepend-content><CIcon name="cilText"/></template>
-            </CInput>
-          </CCol>
         </CRow>
         <CRow>
           <CCol sm="12">
-            <CTextarea label="Descripción" placeholder="Descripción"  vertical rows="9" v-model="form.desc">
+            <CTextarea label="Observaciones" placeholder="Observaciones"  maxlength="30000" vertical rows="9" v-model="form.obs">
               <template #prepend-content><CIcon name="cilText"/></template>
             </CTextarea>
           </CCol>
-        </CRow>
+       </CRow>
       </fieldset>
     </CCardBody>
     <CCardFooter>
@@ -68,12 +49,11 @@
 </template>
 
 <script>
-import repoPer from './Repositories'
-import check from '@/repositories/global/check'
+import repoQys from './Repositories'
 import ActModalTable from '../actividad/ActModalTable'
 
 export default {
-  name: 'PerShow',
+  name: 'QysShow',
   components: {
     ActModalTable
   },
@@ -88,14 +68,11 @@ export default {
   },
   methods: {
     goBack() { this.$router.go(-1) },
-    permisos(permisos) {
-      return check.permiso(permisos)
-    },
     async getRegistro() {
       let self      = this;
-      self.form     = await repoPer.getRegistro(self);
+      self.form     = await repoQys.getRegistro(self);
       self.showForm = false
-    },
-  },
+    }
+  }
 }
 </script>

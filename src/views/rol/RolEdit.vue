@@ -46,7 +46,7 @@
                 </b-form-group>
               </b-list-group-item></b-list-group>
             </perfect-scrollbar>
-             <span class="text-danger float-right" v-if="!$v.form.permis.required">Seleccionar por lo menos una opción.</span>
+            <span class="text-danger float-right" v-if="!$v.form.permis.required">Seleccionar por lo menos una opción.</span>
           </CCol>
         </CRow>
         <!-- 

@@ -2,12 +2,14 @@ import AuthRoutes from './public/AuthRoutes';
 import InicioRoutes from './inicio/InicioRoutes';
 import PerfilRoutes from './perfil/PerfilRoutes';
 import SucursalRoutes from './sucursal/SucursalRoutes';
+import QuejaYSugerenciaRoutes from './quejaYSugerencia/QuejaYSugerenciaRoutes';
 import CatalogoRoutes from './catalogo/CatalogoRoutes';
 import ActividadRoutes from './actividad/ActividadRoutes';
 import UsuarioRoutes from './usuario/UsuarioRoutes';
 import RolRoutes from './rol/RolRoutes';
 import PermisoRoutes from './permiso/PermisoRoutes';
 import papeleraDeReciclajeRoutes from './papeleraDeReciclaje/papeleraDeReciclajeRoutes';
+
 
 const configRoutes = () => {
   return [
@@ -26,6 +28,10 @@ const configRoutes = () => {
     {
       ...SucursalRoutes,
       children : [...SucursalRoutes.children]
+    },
+    {
+      ...QuejaYSugerenciaRoutes,
+      children : [...QuejaYSugerenciaRoutes.children]
     },
     {
       ...CatalogoRoutes,

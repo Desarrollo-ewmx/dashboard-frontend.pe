@@ -27,7 +27,7 @@
           >
           <template #email_registro="{item}">
             <td>
-              <CLink :to="{ name: 'Detalles Usuario', params: { id: item.user_id }}" v-if="permisos(['usuario.show'])" target="_blank">{{ item.name }} ({{ item.email_registro }})</CLink>
+              <CLink :to="{ name: 'Detalles Usuario', params: { id: item.user_id }}" v-if="permisos(['usuario.show', 'usuario.edit'])" target="_blank">{{ item.name }} ({{ item.email_registro }})</CLink>
               <span v-else>{{ item.name }} ({{ item.email_registro }})</span>
             </td>
           </template>

@@ -13,9 +13,10 @@
         <MenuCatalogos />
       </CSidebarNavDropdown>
       <MenuSucursales />
+      <MenuQuejaYSugerencia />
       <MenuUsuarios />
       <MenuRoles />
-      <CSidebarNavItem name="Papelera de reciclaje" to="/papelera" icon="cibArchiveOfOurOwn" v-if="permisos(['papeleraDeReciclaje.show', 'papeleraDeReciclaje.destroy', 'papeleraDeReciclaje.restore'])"></CSidebarNavItem>
+      <CSidebarNavItem name="Papelera de reciclaje" to="/papelera" icon="cilRecycle" v-if="permisos(['papeleraDeReciclaje.show', 'papeleraDeReciclaje.destroy', 'papeleraDeReciclaje.restore'])"></CSidebarNavItem>
     </CSidebarNav>
 
     <CSidebarMinimizer class="c-d-md-down-none" @click.native="$store.commit('toggle', 'sidebarMinimize')" />
@@ -29,6 +30,7 @@ import MenuCatalogos from './Menu/MenuCatalogos'
 import MenuUsuarios from './Menu/MenuUsuarios'
 import MenuSucursales from './Menu/MenuSucursales'
 import MenuRoles from './Menu/MenuRoles'
+import MenuQuejaYSugerencia from './Menu/MenuQuejaYSugerencia'
 
 export default {
   name: 'TheSidebar',
@@ -37,7 +39,8 @@ export default {
     MenuCatalogos,
     MenuUsuarios,
     MenuSucursales,
-    MenuRoles
+    MenuRoles,
+    MenuQuejaYSugerencia
   },
   data () {
     return {
