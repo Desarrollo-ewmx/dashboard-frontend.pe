@@ -31,13 +31,14 @@
             <span class="text-danger float-right" v-if="!$v.form.direc.maxLength">Este campo no debe contener más de {{$v.form.direc.$params.maxLength.max }} caracteres.</span>
           </CCol>
         </CRow>
-        <!--
+        <SucCreateEtiquetas :etiquetas="form.etiquetas" @response="respSucCreateEtiquetas($event)" />
+
         <CCol lg="6">
           <CCard :class="`bg-${submitted ? 'info' : 'secondary' }`">
             <pre>{{formString}}</pre>
           </CCard>
         </CCol>
-        -->
+        
       </CCardBody>
       <CCardFooter>
         <CRow class="content-center">
@@ -55,6 +56,7 @@
 <script>
 import repoSuc from './Repositories'
 import SucMenu from './SucMenu'
+import SucCreateEtiquetas from './SucCreateEtiquetas'
 import CatModalCreate from '../catalogo/CatModalCreate'
 import alert from '@/repositories/global/alert'
 import { validationMixin } from "vuelidate"
@@ -64,6 +66,7 @@ export default {
   name: 'SucCreate',
   components: {
     SucMenu,
+    SucCreateEtiquetas,
     CatModalCreate
   },
   data() {
@@ -76,7 +79,7 @@ export default {
     }
   },
   computed: {
-    //formString() { return JSON.stringify(this.form, null, 4) },
+    formString() { return JSON.stringify(this.form, null, 4) },
     isValid() { return !this.$v.form.$invalid },
   },
   mixins: [validationMixin],
@@ -84,7 +87,8 @@ export default {
     form: {
       suc: { required, maxLength: maxLength(50) },
       ser_cot: { required },
-      direc: { required, maxLength: maxLength(200) }
+      direc: { required, maxLength: maxLength(200) },
+      etiquetas: { }
     },
   },
   methods: {
@@ -93,6 +97,7 @@ export default {
         suc: '',
         direc: '',
         ser_cot: '',
+        etiquetas: ''
       }
     },
     clearForm() {
@@ -100,6 +105,7 @@ export default {
       self.form.suc     = ''
       self.form.direc   = ''
       self.form.ser_cot = ''
+      self.form.etiquetas = ''
     },
     checkIfValid(fieldName) {
       const field = this.$v.form[fieldName]
@@ -122,6 +128,9 @@ export default {
     },
     respCatModalCreate(dataEvent) {
       this.form.ser_cot = dataEvent
+    },
+    respSucCreateEtiquetas(dataEvent) {
+      this.form.etiquetas = dataEvent
     }
   }
 }

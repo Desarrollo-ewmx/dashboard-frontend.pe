@@ -32,7 +32,7 @@
               <span class="pantallaMax985px">Hasta: </span><input type="date" :value="endDate" @change="e => setDateFilter(e, 'end')" />
             </template>
             <template #id="{item}">
-              <td title="Detalles">
+              <td>
                 <CLink :to="{ name: 'Detalles Queja y Sugerencia', params: { id: item.id }}" v-if="permisos(['quejaYSugerencia.show', 'quejaYSugerencia.edit'])" v-text="item.id" />
                 <span v-else v-text="item.id" />
               </td>

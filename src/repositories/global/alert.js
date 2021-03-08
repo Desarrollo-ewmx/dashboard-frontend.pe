@@ -60,7 +60,6 @@ const response200 = (opcion, titulo, id) => {
 
   Swal.fire({
     toast: toast, // Opcion para hacer la ventana mas pequeña o grande
-    //background: '#77DD77',
     position: 'top-end',
     icon: 'success',
     title: titulo,
@@ -71,8 +70,27 @@ const response200 = (opcion, titulo, id) => {
     timer: 50000
   })
 }
+const checkSucursalActiva = () => {
+  let suc_act = JSON.parse(localStorage.getItem("sucursal"))
 
+  if(suc_act.id == 1) {
+    Swal.fire({
+      toast: false, // Opcion para hacer la ventana mas pequeña o grande
+      position: 'top-end',
+      icon: 'info',
+      title: 'Debe seleccionar una sucursal.',
+      html: '',
+      showConfirmButton: false,
+      showCloseButton: true,
+      timerProgressBar: true,
+      timer: 50000
+    })
+    return false;
+  }
+  return true;
+}
 export default ({
   responseCatch,
   response200,
+  checkSucursalActiva
 });

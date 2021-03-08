@@ -133,9 +133,9 @@ export default {
     },
     clearForm() {
       let self          = this;
-      self.form.suc     = ''
-      self.form.direc   = ''
-      self.form.ser_cot = ''
+      self.form.tip     = ''
+      self.form.depto   = ''
+      self.form.obs = ''
     },
     checkIfValid(fieldName) {
       const field = this.$v.form[fieldName]
@@ -145,13 +145,17 @@ export default {
       return !(field.$invalid || field.$model === '')
     },
     async store() {
-      let self  = this;
-      let data  = await repoQys.storeRegistro(self)
-      if(data != undefined) {
-        self.clearForm()
-        self.submitted  = false
-        self.spinner    = false
-        await alert.response200(2, '¡Registrado exitosamente!', data.id)
+      let suc_act_1 = await alert.checkSucursalActiva()
+      
+      if(suc_act_1) {
+        let self  = this;
+        let data  = await repoQys.storeRegistro(self)
+        if(data != undefined) {
+          self.clearForm()
+          self.submitted  = false
+          self.spinner    = false
+          await alert.response200(2, '¡Registrado exitosamente!', data.id)
+        }
       }
     },
   }
