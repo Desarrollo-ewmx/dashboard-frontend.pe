@@ -37,7 +37,7 @@
       <span class="text-danger float-right" v-if="!$v.form.text.maxLength">Este campo no debe contener más de {{$v.form.text.$params.maxLength.max }} caracteres.</span>
     </CCol>
     <CCol sm="3">
-      <CInput label="URL" type="text" placeholder="URL" maxlength="150" class="mb-0" :lazy="false" :value.sync="$v.form.url.$model" :isValid="checkIfValid('url')">
+      <CInput label="URL" type="text" placeholder="URL" maxlength="200" class="mb-0" :lazy="false" :value.sync="$v.form.url.$model" :isValid="checkIfValid('url')">
         <template #prepend-content><CIcon name="cilText"/></template>
       </CInput>
       <span class="text-danger float-right" v-if="!$v.form.url.maxLength">Este campo no debe contener más de {{$v.form.url.$params.maxLength.max }} caracteres.</span>
@@ -76,10 +76,9 @@
 </template>
 
 <script>
-
 import opcSelect from '@/repositories/opcionesSelect/sucursal'
 import { validationMixin } from "vuelidate"
-import { required, maxLength } from "vuelidate/lib/validators"
+import { required, maxLength, url } from "vuelidate/lib/validators"
 import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.min.css'
 
@@ -103,9 +102,9 @@ export default {
   validations: {
     form: {
       tip: { required },
-      value: { required, maxLength: maxLength(150) },
-      url: { required, maxLength: maxLength(150) },
-      text: { required, maxLength: maxLength(150) }
+      value: { maxLength: maxLength(150) },
+      text: { required, maxLength: maxLength(200) },
+      url: { url ,maxLength: maxLength(150) }
     },
   },
   methods: {
@@ -136,8 +135,8 @@ export default {
       self.etiquetas.push({
         tip:    self.form.tip.value,
         value:  self.form.value,
-        text:  self.form.text,
-        url:  self.form.url
+        text:   self.form.text,
+        url:    self.form.url
       })
       self.clearForm()
       self.$emit('response', self.etiquetas)

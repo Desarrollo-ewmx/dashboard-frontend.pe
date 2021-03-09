@@ -15,7 +15,7 @@ let router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  check.getUserAutenticado(to, next).then((response) => {
+  check.getUserAutenticado(to, next)
     document.title = to.meta.title; // Vuelve dinamico el title de la pagina, este valor se define en la meta de cada ruta
 
     let roles = localStorage.getItem("roles");
@@ -36,7 +36,7 @@ router.beforeEach((to, from, next) => {
     }else{
       next() // Si la ruta solicitada no esta protegida por administrador deja avanzar
     }
-  })
+  
 })
 
 export default router
